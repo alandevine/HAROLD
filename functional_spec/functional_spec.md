@@ -18,7 +18,11 @@
 ## 1. Introduction
 
 ### 1.1 Overview
-H.A.R.O.L.D is a robotic arm which will be trained using a combination of *Reinforcement Learning* and *H.E.R*, which allows us to create a functional and accurate robotic arm, which does not require a *P.I.D Controller* to move smoothly.
+H.A.R.O.L.D is a robotic arm which will be trained using a combination of *Reinforcement Learning*, *H.E.R*, and *D.D.P.G*, which allows us to create a functional and accurate robotic arm, which does not require a *P.I.D Controller* to move smoothly. The aim of this project is to train H.A.R.O.L.D to be able to grab, lift and reposition a given object to a specified location.
+
+We will be using 2 HIMAX cameras, one mounted externally and on mounted on the arm, in order to give H.A.R.O.L.D greater positional awareness as well as being able to locate the object it wants to pick up in relation to itself.
+
+Given enough time, we also plan to implement a *GUI* which allows the user to select an object, which will be classified by a pre-trained network, for H.A.R.O.L.D to pick up and reposition.
 
 ### 1.2 Business Context
 
@@ -34,13 +38,13 @@ By making use of *machine learning* and *neural networks*, we can both remove th
    - A form of machine learning which doesn't require any datasets.
 2. H.E.R (Hindsight Experience Replay)
    - A method of simulating artificial data by "pretending" that the goal was different to the goal when training was actually running.<sub>[[arXiv:1707.01495]](https://arxiv.org/pdf/1707.01495.pdf)[cs.LG]</sub>
-3. P.I.D Controller
+3. D.D.P.G (Deep Deterministic Policy Gradient)
+4. P.I.D Controller
    - An instrument used in industrial control applications to regulate temperature, flow, pressure, speed and other process variables. PID (proportional integral derivative) controllers use a control loop feedback mechanism to control process variables and are the most accurate and stable controller.<sub>[]()</sub>
-4. Machine Learning
+5. Machine Learning
    - The scientific study of algorithms and statistical models that computer systems use to preform a specific task without explicit instructions.
-5. Neural Network
+6. Neural Network
    - A collection of nodes connected by synapses which recieve and process signals to complete a task.
-6. 
 
 ## 2. General Description
 
