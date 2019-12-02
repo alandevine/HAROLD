@@ -1,4 +1,3 @@
-
 0. Table of contents
 1. Introduction
 1.1 Overview
@@ -19,7 +18,7 @@
 ## 1. Introduction
 
 ### 1.1 Overview
-
+H.A.R.O.L.D is a robotic arm which will be trained using a combination of *Reinforcement Learning* and *H.E.R*, which allows us to create a functional and accurate robotic arm, which does not require a *P.I.D Controller* to move smoothly.
 
 ### 1.2 Business Context
 
@@ -27,7 +26,25 @@ Robotics play a huge role in the manufacturing industry which allows much of the
 
 Current 
 
-By making use of machine learning and neural networks, we can both remove the aforementioned need for specialized training and the strict rules which current implementations must abide by.
+By making use of *machine learning* and *neural networks*, we can both remove the aforementioned need for specialized training and the strict rules which current implementations must abide by.
+
+### 1.3 Glossary
+
+1. Reinforcemnet Learning
+   - A form of machine learning which doesn't require any datasets.
+2. H.E.R (Hindsight Experience Replay)
+   - A method of simulating artificial data by "pretending" that the goal was different to the goal when training was actually running.(arXiv:1707.01495 [cs.LG])
+3. P.I.D Controller
+   - An instrument used in industrial control applications to regulate temperature, flow, pressure, speed and other process variables. PID (proportional integral derivative) controllers use a control loop feedback mechanism to control process variables and are the most accurate and stable controller.
+4. Machine Learning
+   - The scientific study of algorithms and statistical models that computer systems use to preform a specific task without explicit instructions.
+5. Neural Network
+   - A collection of nodes connected by synapses which recieve and process signals to complete a task.
+6. 
+
+## 2. General Description
+
+### 2.1 Product / System Functions
 
 
 ---
