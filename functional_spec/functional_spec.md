@@ -33,9 +33,9 @@ By making use of *machine learning* and *neural networks*, we can both remove th
 1. Reinforcemnet Learning
    - A form of machine learning which doesn't require any datasets.
 2. H.E.R (Hindsight Experience Replay)
-   - A method of simulating artificial data by "pretending" that the goal was different to the goal when training was actually running.(arXiv:1707.01495 [cs.LG])
+   - A method of simulating artificial data by "pretending" that the goal was different to the goal when training was actually running.<sub>[[arXiv:1707.01495]](https://arxiv.org/pdf/1707.01495.pdf)[cs.LG]</sub>
 3. P.I.D Controller
-   - An instrument used in industrial control applications to regulate temperature, flow, pressure, speed and other process variables. PID (proportional integral derivative) controllers use a control loop feedback mechanism to control process variables and are the most accurate and stable controller.
+   - An instrument used in industrial control applications to regulate temperature, flow, pressure, speed and other process variables. PID (proportional integral derivative) controllers use a control loop feedback mechanism to control process variables and are the most accurate and stable controller.<sub>[]()</sub>
 4. Machine Learning
    - The scientific study of algorithms and statistical models that computer systems use to preform a specific task without explicit instructions.
 5. Neural Network
