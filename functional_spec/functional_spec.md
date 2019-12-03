@@ -18,11 +18,11 @@
 ## 1. Introduction
 
 ### 1.1 Overview
-H.A.R.O.L.D is a robotic arm which will be trained using a combination of *Reinforcement Learning*, *H.E.R*, and *D.D.P.G*, which allows us to create a functional and accurate robotic arm, which does not require a *P.I.D Controller* to move smoothly. The aim of this project is to train H.A.R.O.L.D to be able to grab, lift and reposition a given object to a specified location.
+H.A.R.O.L.D is a robotic arm which will be trained using a combination of *Reinforcement Learning*<sup>(1)</sup>, *H.E.R*<sup>(2)</sup>, and *D.D.P.G*<sup>(3)</sup>, which allows us to create a functional and accurate robotic arm, which does not require a *P.I.D Controller*<sup>(4)</sup> to move smoothly. The aim of this project is to train H.A.R.O.L.D to be able to grab, lift and reposition a given object to a specified location.
 
 We will be using 2 HIMAX cameras, one mounted externally and on mounted on the arm, in order to give H.A.R.O.L.D greater positional awareness as well as being able to locate the object it wants to pick up in relation to itself.
 
-Given enough time, we also plan to implement a *GUI* which allows the user to select an object, which will be classified by a pre-trained network, for H.A.R.O.L.D to pick up and reposition.
+Given enough time, we also plan to implement a *GUI*<sup>(5)</sup> which allows the user to select an object, which will be classified by a pre-trained network, for H.A.R.O.L.D to pick up and reposition.
 
 ### 1.2 Business Context
 
@@ -30,21 +30,28 @@ Robotics play a huge role in the manufacturing industry which allows much of the
 
 Current 
 
-By making use of *machine learning* and *neural networks*, we can both remove the aforementioned need for specialized training and the strict rules which current implementations must abide by.
+By making use of *machine learning*<sup>(6)</sup> and *neural networks*<sup>(7)</sup>, we can both remove the aforementioned need for specialized training and the strict rules which current implementations must abide by.
 
 ### 1.3 Glossary
 
-1. Reinforcemnet Learning
-   - A form of machine learning which doesn't require any datasets.
+1. Reinforcement Learning
+   - The training of machine learning models to make a sequence of decisions. The agent learns to achieve a goal in an uncertain, potentially complex environment.<sub>[[deepsense]](https://deepsense.ai/what-is-reinforcement-learning-the-complete-guide/)</sub>
 2. H.E.R (Hindsight Experience Replay)
    - A method of simulating artificial data by "pretending" that the goal was different to the goal when training was actually running.<sub>[[arXiv:1707.01495]](https://arxiv.org/pdf/1707.01495.pdf)[cs.LG]</sub>
 3. D.D.P.G (Deep Deterministic Policy Gradient)
+   - <sub>[[arXiv:1509.02971]](https://arxiv.org/abs/1509.02971)[cs.LG]</sub>
 4. P.I.D Controller
    - An instrument used in industrial control applications to regulate temperature, flow, pressure, speed and other process variables. PID (proportional integral derivative) controllers use a control loop feedback mechanism to control process variables and are the most accurate and stable controller.<sub>[]()</sub>
-5. Machine Learning
+5. G.U.I (Graphical User Interface)
+   - A visual menu which the user utilises to interact with the program or hardware
+6. Machine Learning
    - The scientific study of algorithms and statistical models that computer systems use to preform a specific task without explicit instructions.
-6. Neural Network
-   - A collection of nodes connected by synapses which recieve and process signals to complete a task.
+7. Neural Network
+   - A collection of nodes connected by synapses which receive and process signals to complete a task.
+8. DM (Data Matrix)
+   -  A 2 Dimensional code consisting of black and white cells arranged in a square or rectangle pattern<sub>[[wikipedia]](https://en.wikipedia.org/wiki/Data_Matrix)</sub>
+9. Classifier
+   - A network which predicts the class of given data points<sub>[[towardsdatascience]](https://towardsdatascience.com/machine-learning-classifiers-a5cc4e1b0623)</sub>
 
 ## 2. General Description
 
@@ -93,7 +100,7 @@ This stage depends heavily on the arm moving to the object, since the object can
 
 ##### Description
 
-Once the object is held, the arm will lift it, and move the object to an area with a *DM* printed onto a page, designating where the object will be placed.
+Once the object is held, the arm will lift it, and move the object to an area with a *DM*<sup>(8)</sup> printed onto a page, designating where the object will be placed.
 
 ##### Criticality
 
@@ -105,7 +112,7 @@ Again, it's important for us to make sure the object being moved is not too heav
 
 ##### Dependencies of other requirements
 
-This step is dependent on both the arm being able to grasp the object well, and also on the *classifier* being able to detect and locate the *DM* consistently.
+This step is dependent on both the arm being able to grasp the object well, and also on the *classifier*<sup>(9)</sup> being able to detect and locate the *DM* consistently.
 
 ### 3.4 Classifier
 
@@ -119,5 +126,5 @@ This is a very important part of the project as the arm will not be able to dete
 
 ##### Technical issues
 
-Most *CCN*s are dependent on lighting conditions, but since it won't be our own network, we wont know the limitations without first select and then test it.
+Most *CCN*s<sup>(10)</sup> are dependent on lighting conditions, but since it won't be our own network, we wont know the limitations without first select and then test it.
 
