@@ -55,7 +55,44 @@ By making use of *machine learning*<sup>(6)</sup> and *neural networks*<sup>(7)<
 
 ## 2. General Description
 
-### 2.1 Product / System Functions
+### 2.1 Product/ System Functions
+
+Here is a preliminary list of functions we would are looking to implement.
+
+* Object Detection.
+* Ability to pickup generic objects.
+* Move a generic object to a predefined area.
+* Collision Avoidance.
+
+### 2.2 User Characteristics and Objectives
+
+Our goal is to make our arm accessible to as many users as possible. This includes users with limited technical/ robotics experience. Basic knowledge of how to operate a GUI and common sense around machinery should be enough.
+
+Time permitting we would like to implement an easy to use scripting interface. This would allow our users to easily develop rudimentary events that could take place in a manufacturing environment.
+
+### 2.3 Operational Scenarios
+
+* **Select Object**
+The user will be shown both cameras views through the GUI with bound boxes around each recognized object. The user will then be able to select this object by left clicking on the bound box, which will in tern instruct HAROLD to pickup the selected object.
+
+* **Foo**
+bar
+
+### 2.4 Constraints
+
+There are several constraints that will effect this project both physical and software related.
+
+* **Strength of Servos.**
+There is a good chance that our arm's servos will be weaker than we would like. Because of this we will need to implement some form of weight limitation. This will be subject to testing.
+
+* **Reach**
+There is a limit to how far the arm will be able to pickup objects, this is based on the physical dimensions of the arm, and the rail at the base for lateral movement.
+
+* **Time**
+As this project is based on Reinforcement Learning, the longer we train the models, the better the arm will operate. We're hoping to overcome this by making use of H.E.R (as explained above), this has had proven effects on the efficiency of training Reinforced models.
+
+* **Lighting Conditions**
+The Lighting of a particular scene could have an effect on object recognition. If this proves to be an issue we may need to add led's to the chaise of the arm.
 
 
 ## 3. Functional Requirements
