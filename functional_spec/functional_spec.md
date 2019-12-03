@@ -51,14 +51,73 @@ By making use of *machine learning* and *neural networks*, we can both remove th
 ### 2.1 Product / System Functions
 
 
----
-garbage
---
+## 3. Functional Requirements
 
-H.A.R.O.L.D will be a Computer Vision driven robotic arm designed for repositioning generic objects in a given area. He will be built on a Convolutional Neural Network and will make use of the Movidius Neural Compute Stick to accelerate the Network. 
+### 3.1 Arm moves towards object
 
-These modifications will be in the form of 2 HIMAX cameras. The HIMAX cameras will be located on the body and looking perpendicular to the surface of operation for greater positional awareness, by allowing it to visually locate itself and the object in question.
+##### Description
 
-The arm will be trained using a combination of Reinforment Learning and H.E.R. Training will be done via a combination of simulated learning enviroments to remove external variables, optimizing traing, and 
+The robot arm must be able to move towards the object to pick up, such that the clamp can grasp said object.
 
-A Convolutional Neural Network is a type of network which is specialised to run inference on image data, allowing the network to label specific objects in an image or frame of a video. We plan to use this to label both the object and the arm itself in order to orientate and pickup the object accurately and place it down in a specified location.
+##### Criticality
+
+This is an essential step in picking up an object, since if the object is out of range it cannot be held by the clamp.
+
+##### Technical issues
+
+The main issue is whether we can get the network to train sufficiently so that it can move to the object accurately and consistently.
+
+##### Dependencies on other requirements
+
+This depends on the *classifier* being able to recognise the object and create a bounding box around it.
+
+### 3.2 Clamp grasps object
+
+##### Description
+
+The clamp mounted on the arm will close such that it grasps any object which is positioned between the clamp.
+
+##### Criticality
+
+It is important for the clamp to be able to grasp the object firmly so as not to drop it while trying to reposition it
+
+##### Technical issues
+
+It's important issue for us to consider the weight of the object in relation to the strength of the servos controlling the arm, as it will not be able to lift the object if it can't grasp it firmly enough.
+
+##### Dependencies on other requirements
+
+This stage depends heavily on the arm moving to the object, since the object cannot be held if it's not in range of the arm.
+
+### 3.3 Moving the object to a designated space
+
+##### Description
+
+Once the object is held, the arm will lift it, and move the object to an area with a *DM* printed onto a page, designating where the object will be placed.
+
+##### Criticality
+
+In order for this arm to be used in an industrial setting, it must be able to consistently and accurately move objects to their desired location.
+
+##### Technical issues
+
+Again, it's important for us to make sure the object being moved is not too heavy for the servos to be able to lift and move.
+
+##### Dependencies of other requirements
+
+This step is dependent on both the arm being able to grasp the object well, and also on the *classifier* being able to detect and locate the *DM* consistently.
+
+### 3.4 Classifier
+
+##### Description
+
+A *Neural Network* able to recognise and label an object, allowing the arm to locate specific objects and locations.
+
+##### Criticality
+
+This is a very important part of the project as the arm will not be able to detect any objects without it.  Since this is such an important part which requires a lot of training and a large dataset to develop, we have decided to use a pre-trained network.
+
+##### Technical issues
+
+Most *CCN*s are dependent on lighting conditions, but since it won't be our own network, we wont know the limitations without first select and then test it.
+
