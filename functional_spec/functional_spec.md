@@ -167,8 +167,26 @@ Most *CCN*s<sup>(10)</sup> are dependent on lighting conditions, but since it wo
 
 ## 4. System Architecture
 
-![System Architecture Diagram](./images/SysArch_1.png)
+![System Architecture Diagram](./Images/SysArch_1.png)
 
 If we have enough time to develop the GUI<sup>(5)</sup>, the System architecture will look more like this
 
-![System Architecture Diagram with GUI](./images/SysArch_2.png)
+![System Architecture Diagram with GUI](.Images/SysArch_2.png)
+
+## 5. High-Level Design
+
+#### 5.1 Initialisation
+
+The user connects to the main controller on the arm, which launches the GUI<sup>(5)</sup>, allowing the user to start the arm.
+
+#### 5.2 User Selects Object
+
+The user selects the object and the arm starts.
+
+#### 5.3 Arm moves object
+
+The arm will move to, pick up and relocate the object that was selected by the user on startup.
+
+#### 5.4 Arm returns to rest position
+
+The arm has now placed the object on the DM<sup>(8)</sup> and returns to it's initial position.
