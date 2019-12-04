@@ -167,3 +167,8 @@ Most *CCN*s<sup>(10)</sup> are dependent on lighting conditions, but since it wo
 
 ## 4. System Architecture
 
+![System Architecture Diagram](./images/SysArch_1.png)
+
+If we have enough time to develop the GUI<sup>(5)</sup>, the System architecture will look more like this
+
+![System Architecture Diagram with GUI](./images/SysArch_2.png)
