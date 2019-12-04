@@ -194,4 +194,4 @@ The arm has now placed the object on the DM<sup>(8)</sup> and returns to it's in
 ## 6. Preliminary Schedule
 
 Below is our Preliminary Schedule represented by a Gantt chart.
-![Gantt Chart](.Images/gant.png)
+![Gantt Chart](./Images/gant.png)
