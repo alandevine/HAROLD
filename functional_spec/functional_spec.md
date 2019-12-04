@@ -128,3 +128,5 @@ This is a very important part of the project as the arm will not be able to dete
 
 Most *CCN*s<sup>(10)</sup> are dependent on lighting conditions, but since it won't be our own network, we wont know the limitations without first select and then test it.
 
+## 4. System Architecture
+
