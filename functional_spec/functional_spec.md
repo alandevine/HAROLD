@@ -1,18 +1,18 @@
-0. Table of contents
-1. Introduction
-1.1 Overview
-1.2 Business Context
-1.3 Glossary
-2. General Description
-2.1 Product / System Functions
-2.2 User Characteristics and Objectives
-2.3 Operational Scenarios
-2.4 Constraints
-3. Functional Requirements
-4. System Architecture
-5. High-Level Design
-6. Preliminary Schedule
-7. Appendices
+# Table of contents
+    1. Introduction
+        1.1 Overview
+        1.2 Business Context
+        1.3 Glossary
+    2. General Description
+        2.1 Product / System Functions
+        2.2 User Characteristics and Objectives
+        2.3 Operational Scenarios
+        2.4 Constraints
+    3. Functional Requirements
+    4. System Architecture
+    5. High-Level Design
+    6. Preliminary Schedule
+    7. Appendices
 
 
 ## 1. Introduction
@@ -75,8 +75,6 @@ Time permitting we would like to implement an easy to use scripting interface. T
 * **Select Object**
 The user will be shown both cameras views through the GUI with bound boxes around each recognized object. The user will then be able to select this object by left clicking on the bound box, which will in tern instruct HAROLD to pickup the selected object.
 
-* **Foo**
-bar
 
 ### 2.4 Constraints
 
