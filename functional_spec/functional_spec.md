@@ -40,14 +40,14 @@ By making use of *machine learning*<sup>(6)</sup> and *neural networks*<sup>(7)<
    - A method of simulating artificial data by "pretending" that the goal was different to the goal when training was actually running.<sub>[[arXiv:1707.01495]](https://arxiv.org/pdf/1707.01495.pdf)[cs.LG]</sub>
 3. D.D.P.G (Deep Deterministic Policy Gradient)
    - <sub>[[arXiv:1509.02971]](https://arxiv.org/abs/1509.02971)[cs.LG]</sub>
-4. P.I.D Controller
-   - An instrument used in industrial control applications to regulate temperature, flow, pressure, speed and other process variables. PID (proportional integral derivative) controllers use a control loop feedback mechanism to control process variables and are the most accurate and stable controller.<sub>[]()</sub>
+4. P.I.D Controller (Proportional-Integral-Device Controller)
+   - A PID Controller is a device which calculates the error between the desired position and the current position, allowing the device to correct for smoother movement.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/PID_controller)</sub>
 5. G.U.I (Graphical User Interface)
-   - A visual menu which the user utilises to interact with the program or hardware
+   - A visual menu which the user utilises to interact with the program or hardware.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/Graphical_user_interface)</sub>
 6. Machine Learning
-   - The scientific study of algorithms and statistical models that computer systems use to preform a specific task without explicit instructions.
+   - The scientific study of algorithms and statistical models that computer systems use to preform a specific task without explicit instructions.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/Machine_learning)</sub>
 7. Neural Network
-   - A collection of nodes connected by synapses which receive and process signals to complete a task.
+   - A collection of nodes connected by synapses which receive and process signals to complete a task.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/Artificial_neural_network)</sub>
 8. DM (Data Matrix)
    -  A 2 Dimensional code consisting of black and white cells arranged in a square or rectangle pattern<sub>[[wikipedia]](https://en.wikipedia.org/wiki/Data_Matrix)</sub>
 9. Classifier
