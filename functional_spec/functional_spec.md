@@ -1,13 +1,13 @@
 # Table of contents
-1. Introduction
-    1 Overview
-    2 Business Context
-    3 Glossary
+1. [Introduction](#Introduction)
+    1.1 [Overview](#Overview)
+    1.2 [Business Context](#Business Context)
+    1.3 Glossary
 2. General Description
-    1 Product / System Functions
-    2 User Characteristics and Objectives
-    3 Operational Scenarios
-    4 Constraints
+    2.1 Product / System Functions
+    2.2 User Characteristics and Objectives
+    2.3 Operational Scenarios
+    2.4 Constraints
 3. Functional Requirements
 4. System Architecture
 5. High-Level Design
@@ -52,6 +52,8 @@ By making use of *machine learning*<sup>(6)</sup> and *neural networks*<sup>(7)<
    -  A 2 Dimensional code consisting of black and white cells arranged in a square or rectangle pattern<sub>[[wikipedia]](https://en.wikipedia.org/wiki/Data_Matrix)</sub>
 9. Classifier
    - A network which predicts the class of given data points<sub>[[towardsdatascience]](https://towardsdatascience.com/machine-learning-classifiers-a5cc4e1b0623)</sub>
+10. CNN (Convolutional Neural Network)
+   - A type of neural network commonly used to analyse visual imagery.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/Convolutional_neural_network)</sub>
 
 ## 2. General Description
 
