@@ -14,7 +14,6 @@
 - [**4. System Architecture**](#4-system-architecture)
 - [**5. High-Level Design**](#5-high-level-design)
 - [**6. Preliminary Schedule**](#6-preliminary-schedule)
-- [**7. Appendices**](#7-appendices)
 
 ## **1. Introduction**
 
@@ -75,8 +74,11 @@ Time permitting we would like to implement an easy to use scripting interface. T
 
 ### 2.3 Operational Scenarios
 
-* **Select Object**
+* **Select Object:**
 The user will be shown both cameras views through the GUI with bound boxes around each recognized object. The user will then be able to select this object by left clicking on the bound box, which will in tern instruct HAROLD to pickup the selected object.
+
+* **Select Camera View:**
+The user will have two camera positions available to them. The first camera is positioned on the body of the arm. This position will provide more context to the objects in the scene. The second camera position is located normal to the surface of operation. This position will also show the effective range of the arm.
 
 
 ### 2.4 Constraints
