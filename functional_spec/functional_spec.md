@@ -53,7 +53,7 @@ By making use of *machine learning*<sup>(6)</sup> and *neural networks*<sup>(7)<
 9. Classifier
    - A network which predicts the class of given data points<sub>[[towardsdatascience]](https://towardsdatascience.com/machine-learning-classifiers-a5cc4e1b0623)</sub>
 10. CNN (Convolutional Neural Network)
-   - A Class of Deep Neural Network which is used primarily for analysing visual imagery.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/Convolutional_neural_network)</sub>
+    - A Class of Deep Neural Network which is used primarily for analysing visual imagery.<sub>[[Wikipedia]](https://en.wikipedia.org/wiki/Convolutional_neural_network)</sub>
 
 ## 2. General Description
 
