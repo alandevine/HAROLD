@@ -1,18 +1,18 @@
 # Table of contents
-    1. Introduction
-        1.1 Overview
-        1.2 Business Context
-        1.3 Glossary
-    2. General Description
-        2.1 Product / System Functions
-        2.2 User Characteristics and Objectives
-        2.3 Operational Scenarios
-        2.4 Constraints
-    3. Functional Requirements
-    4. System Architecture
-    5. High-Level Design
-    6. Preliminary Schedule
-    7. Appendices
+1. Introduction
+    1 Overview
+    2 Business Context
+    3 Glossary
+2. General Description
+    1 Product / System Functions
+    2 User Characteristics and Objectives
+    3 Operational Scenarios
+    4 Constraints
+3. Functional Requirements
+4. System Architecture
+5. High-Level Design
+6. Preliminary Schedule
+7. Appendices
 
 
 ## 1. Introduction
