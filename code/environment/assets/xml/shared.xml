@@ -47,13 +47,14 @@
 
     </asset>
 
-    <equality>
+    <!--    <equality>
         <weld body1="robot0:mocap" body2="robot0:gripper_bottom_plate" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
     </equality>
     
     <contact>
         <exclude body1="robot0:gripper_left" body2="robot0:gripper_right"></exclude>
     </contact>
+   -->
     
     <default>
         <default class="robot0:harold">
