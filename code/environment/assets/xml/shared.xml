@@ -1,0 +1,76 @@
+<mujoco>
+    <asset>
+        <texture type="skybox" builtin="gradient" rgb1="0.44 0.85 0.56" rgb2="0.46 0.87 0.58" width="32" height="32"></texture>
+        <texture name="texture_block" file="block.png" gridsize="3 4" gridlayout=".U..LFRB.D.."></texture>
+
+        <material name="floor_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="table_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.93 0.93 0.93 1"></material>
+        <material name="block_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="puck_mat" specular="0" shininess="0.5" reflectance="0" rgba="0.2 0.2 0.2 1"></material>
+        <material name="robot0:geomMat" shininess="0.03" specular="0.4"></material>
+        <material name="robot0:gripper_finger_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:gripper_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:arm_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:head_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:torso_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        <material name="robot0:base_mat" shininess="0.03" specular="0.4" reflectance="0"></material>
+        
+        <mesh file="1M2A.stl" name="robot0:rotary_base"></mesh>
+        <mesh file="1M1A.stl" name="robot0:rotary_plate"></mesh>
+        <mesh file="1M3A.stl" name="robot0:base_motor_mount"></mesh>
+        <mesh file="2M1D.stl" name="robot0:shoulder_base"></mesh>
+        <mesh file="2M2HA.stl" name="robot0:shoulder_joint_1"></mesh>
+        <mesh file="2M2MA.stl" name="robot0:shoulder_joint_2"></mesh>
+        <mesh file="3M1D.stl" name="robot0:elbow_base"></mesh>
+        <mesh file="3M2C.stl" name="robot0:elbow_joint_half_1"></mesh>
+        <mesh file="3M2CC.stl" name="robot0:elbow_joint_half_2"></mesh>
+        <mesh file="4M1D.stl" name="robot0:wrist_base"></mesh>
+        <mesh file="4M2B.stl" name="robot0:wrist_half_1"></mesh>
+        <mesh file="4M2CB.stl" name="robot0:wrist_half_2"></mesh>
+        <mesh file="BottomPlateC.stl" name="robot0:gripper_bottom_plate"></mesh>
+        <mesh file="Cilinder.stl" name="robot0:cylinder"></mesh>
+        <mesh file="GripperLeftB.stl" name="robot0:gripper_left"></mesh>
+        <mesh file="GripperRightB.stl" name="robot0:gripper_right"></mesh>
+        <mesh file="IdolGearB.stl" name="robot0:servo_gear_a"></mesh>
+        <mesh file="PivotArmB.stl" name="robot0:pivot_arm_b"></mesh>
+        <mesh file="PotesBaseB.stl" name="robot0:base_legs"></mesh>
+        <mesh file="ServoGearB.stl" name="robot0:servo_gear_b"></mesh>
+        <mesh file="T2M1BD.stl" name="robot0:shoulder_belt_tensioner_right"></mesh>
+        <mesh file="T2M1BL.stl" name="robot0:shoulder_belt_tensioner_left"></mesh>
+        <mesh file="T3M1C.stl" name="robot0:wrist_belt_tensioner"></mesh>
+        <mesh file="T4M1E.stl" name="robot0:elbow_belt_tensioner"></mesh>
+        <mesh file="Tapa2M1C.stl" name="robot0:shoulder_shaft_cover"></mesh>
+        <mesh file="Tapa3M1C.stl" name="robot0:elbow_shaft_cover"></mesh>
+        <mesh file="Tapa4M1D.stl" name="robot0:wrist_shaft_cover"></mesh>
+        <mesh file="TBC.stl" name="robot0:wrist_back_cover"></mesh>
+        <mesh file="TopPlateC.stl" name="robot0:gripper_top_plate"></mesh>
+
+    </asset>
+
+    <equality>
+        <weld body1="robot0:mocap" body2="robot0:gripper_bottom_plate" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
+    </equality>
+    
+    <contact>
+        <exclude body1="robot0:gripper_left" body2="robot0:gripper_right"></exclude>
+    </contact>
+    
+    <default>
+        <default class="robot0:harold">
+            <geom margin="0.001" material="robot0:geomMat" rgba="1 1 1 1" solimp="0.99 0.99 0.01" solref="0.01 1" type="mesh" user="0"></geom>
+            <joint armature="1" damping="50" frictionloss="0" stiffness="0"></joint>
+            
+            <default class="robot0:HaroldGripper">
+                <geom condim="4" margin="0.001" type="box" user="0" rgba="0.356 0.361 0.376 1.0"></geom>
+                <joint armature="100" damping="1000" limited="true" solimplimit="0.99 0.999 0.01" solreflimit="0.01 1" type="slide"></joint>
+            </default>
+
+            <default class="robot0:grey">
+                <geom rgba="0.356 0.361 0.376 1.0"></geom>
+            </default>
+            <default class="robot0:blue">
+                <geom rgba="0.086 0.506 0.767 1.0"></geom>
+            </default>
+        </default>
+    </default>
+</mujoco>
