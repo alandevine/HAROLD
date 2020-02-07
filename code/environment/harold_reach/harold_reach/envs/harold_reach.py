@@ -2,8 +2,8 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 
-class HaroldEnv(gym.Env):
-    metadata = ('render.modes': ['human'])
+class HaroldReach(gym.Env):
+    metadata = {'render.modes' : ['human']}
 
     def __init__(self):
         ...
@@ -13,5 +13,5 @@ class HaroldEnv(gym.Env):
         ...
     def render(self, mode='human'):
         ...
-    def close(self):
+    def clost(self):
         ...
