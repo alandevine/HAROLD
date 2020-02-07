@@ -1,2 +1,0 @@
-from harold_reach.envs.harold_reach import HaroldReach
-from harold_reach.envs.harold_extrahard_reach import HaroldExtraHardReach
