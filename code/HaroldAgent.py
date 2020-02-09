@@ -4,11 +4,17 @@ import numpy as np
 
 from keras.models import load_model
 from ReplayBuffer import ReplayBuffer, build_dqn
+from environment.harold_reach.envs.harold_reach_env.harold_reach import HaroldReach
 
 """
 TODO:
     * Implement Hindsight Experince Replay in the learn method
     * Comment Code
+    * Implement some form of training history, e.g.
+        + Rewards given,
+        + Score given,
+        + epsilon value,
+        + etc
 """
 
 
@@ -25,7 +31,9 @@ class HaroldAgent(object):
                 epsilon_dec=0.996,  # Rate at which our epsilon value decreases
                 epsilon_min=0.1,    # Value at which epsilon stops decrementing
                 memory_size=1000000,
-                file_name="harold_dqn"
+                file_name="harold_dqn",
+                n_epochs=200,       # Collection of episodes
+                n_episodes=80
             ):
 
         self.action_space = [i for i in range(n_actions)]
@@ -37,6 +45,10 @@ class HaroldAgent(object):
         self.epsilon_min = epsilon_min
         self.batch_size = batch_size
         self.model_file = file_name
+
+        self.env = HaroldReach()
+        self.n_epochs = n_epochs
+        self.n_episodes = n_episodes
 
         self.memory = ReplayBuffer(memory_size,
                                    input_dims,
@@ -66,7 +78,7 @@ class HaroldAgent(object):
         return action
 
     def learn(self):
-        # This is where the poxy algorithm goes
+        """Method that contains learning algorithms"""
         if self.memory.memory_counter < self.batch_size:
             return
 
@@ -83,14 +95,52 @@ class HaroldAgent(object):
 
         batch_index = np.arange(self.batch_size, dtype=np.int32)
 
-        # main algorithm
-        q_target[batch_index, action_indices] = reward + self.gamma * np.max(q_next, axis=1) * done
+        # DeepQLearning Algorithm
+        q_target[batch_index, action_indices] = (reward
+                                                 + self.gamma
+                                                 * np.max(q_next, axis=1)
+                                                 * done)
 
         _ = self.q_eval.fit(state, q_target, verbose=0)
 
         # Decrement epsilon value by the gradient decent value
         if self.epsilon > self.epsilon_min:
             self.epsilon = self.epsilon * self.epsilon_dec
+
+    def train(self):
+        """Method for training the Network"""
+
+        for epoch in range(self.n_epochs):
+            for episode in range(self.n_episodes):
+                done = False
+                score = 0
+                observation = self.env.reset()
+
+                # Because we are not working with a continous action space,
+                # we are limiting ourselfs to a finite number of timesteps
+                # per episode, other wise the below for loop would be replaced
+                # with `while not done:`
+
+                for _ in range(self.time_step):
+
+                    action = self.act(observation)
+                    new_observation, reward, done, info = self.env.step(action)
+
+                    score += reward
+                    self.save(observation,
+                              action,
+                              reward,
+                              new_observation,
+                              done)
+
+                    # break if we finish the environment
+                    if done is True:
+                        break
+
+            # save model every 5 epochs
+            # this is an arbitrary number and will change
+            if epoch % 10 == 0 and epoch > 0:
+                self.save_model
 
     def save_model(self):
         self.q_eval.save(self.model_file)
