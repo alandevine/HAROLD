@@ -7,20 +7,39 @@
 		<geom conaffinity="0" contype="0" pos="0 0 0" rgba="0 0.5 0 0.1" size="0.005 0.005 1" type="box"></geom>
 	</body>
 
-	<body childclass="robot0:harold" name="robot0:base_link" pos="0 0 0" quat="1 1 0 0">
-		<geom mesh="robot0:rotary_base" name="robot0:rotary_base" material="robot0:base_mat" class="robot0:grey"></geom>
+   <body childclass="robot0:harold" name="robot0:base_link" pos="0 0 0" quat="1 1 0 0">
+	   <geom mesh="robot0:rotary_base" name="robot0:rotary_base" material="robot0:base_mat" class="robot0:grey"></geom>
       <body name="robot0:rotary_plate">
          <geom mesh="robot0:rotary_plate" name="robot0:rotary_plate" material="robot0:base_mat" class="robot0:blue" pos="0 69.5 0"></geom>
          <joint name="robot0:rotator" axis="0 1 0" type="hinge"></joint>
-            <body name="robot0:shoulder">
-                    <geom mesh="robot0:shoulder_base" pos="-80 111 80"></geom>
-                    <body name="robot0:shoulder_joint">
-                        <geom mesh="robot0:shoulder_joint_1" material="robot0:base_mat" pos="0 230 0" quat=".5 .5 -.5 .5" class="robot0:blue"></geom>
-                        <geom mesh="robot0:shoulder_joint_2" material="robot0:base_mat" pos="0 230 0" quat=".5 .5 .5 -.5" class="robot0:blue"></geom>
-                        <joint name="robot0:shoulder_joint" pos="0 230 0" axis="1 0 0" type="hinge"></joint>
-                    </body>
+         <body name="robot0:shoulder">
+            <geom mesh="robot0:shoulder_base" pos="-80 111 80" material="robot0:base_mat"></geom>
+            <body name="robot0:shoulder_joint">
+               <geom mesh="robot0:shoulder_joint_1" material="robot0:base_mat" pos="0 231 0" quat=".5 .5 -.5 .5" class="robot0:blue"></geom>
+               <geom mesh="robot0:shoulder_joint_2" material="robot0:base_mat" pos="0 231 0" quat=".5 .5 .5 -.5" class="robot0:blue"></geom>
+               <joint name="robot0:shoulder_joint" pos="0 231 0" axis="1 0 0" type="hinge"></joint>
+               <body name="robot0:elbow_base">
+                  <geom mesh="robot0:elbow_base" material="robot0:base_mat" pos="-65 310 -42.5"></geom>
+                  <body name="robot0:elbow_joint">
+                     <geom mesh="robot0:elbow_joint_half_1" material="robot0:base_mat" class="robot0:blue" quat="0.707 0 0 -.707" pos="0 580.2 35"></geom>
+                     <geom mesh="robot0:elbow_joint_half_2" material="robot0:base_mat" class="robot0:blue" quat="0 -.707 .707 -0" pos="0 580.2 -35"></geom>
+                     <joint name="robot0:elbow_joint" pos="0 452.5 0" axis="1 0 0" type="hinge"></joint>
+                     <body name="robot0:wrist_base">
+                        <geom mesh="robot0:wrist_base" material="robot0:base_mat" pos="-45 580.5 -35" quat="0.707 0 0.707 0"></geom>
+                        <body name="robot0:wrist_joint">
+                           <geom mesh="robot0:wrist_half_1" class="robot0:blue" material="robot0:base_mat" pos="0 675.5 0" quat="0.5 0.5 -0.5 0.5"></geom>
+                           <geom mesh="robot0:wrist_half_2" class="robot0:blue" material="robot0:base_mat" pos="0 675.5 0" quat="0.5 0.5 0.5 -0.5"></geom>
+                           <joint name="robot0:wrist_joint" pos="0 675.5 0" axis="1 0 0" type="hinge"></joint>
+                           <body name="robot0:hand">
+                              <geom mesh="robot0:gripper_bottom_plate" ></geom>
+                              <geom mesh="robot0:gripper_top_plate"></geom>
+                           </body>
+                        </body>
+                     </body>
+                  </body>
+               </body>
             </body>
+         </body>
       </body>
    </body>
-
 </mujoco>
