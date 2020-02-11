@@ -22,18 +22,21 @@ class HaroldAgent(object):
 
     def __init__(
                 self,
-                alpha,              # Learning Rate
-                gamma,              # Discount Factor
-                n_actions,
-                epsilon,            # Random Factor
-                batch_size,
-                input_dims,
-                epsilon_dec=0.996,  # Rate at which our epsilon value decreases
-                epsilon_min=0.1,    # Value at which epsilon stops decrementing
-                memory_size=1000000,
-                file_name="harold_dqn",
-                n_epochs=200,       # Collection of episodes
-                n_episodes=80
+                alpha,                  # Learning Rate
+                gamma,                  # Discount Factor
+                n_actions,              # Number of actions available in the
+                                        # envirnoment
+                epsilon,                # Random Factor
+                batch_size,             # 
+                input_dims,             # D
+                epsilon_dec=0.996,      # Rate at which the epsilon value decreases
+                epsilon_min=0.1,        # Value at which epsilon stops decrementing
+                memory_size=1000000,    # Maximum size of alotted memory
+                file_name="harold_dqn", # File name for the model
+
+                # Below values are subject to change
+                n_epochs=200,           # Number of epochs to be completed
+                n_episodes=80           # Number of episodes per epoch
             ):
 
         self.action_space = [i for i in range(n_actions)]
@@ -112,8 +115,11 @@ class HaroldAgent(object):
 
         for epoch in range(self.n_epochs):
             for episode in range(self.n_episodes):
+
                 done = False
                 score = 0
+
+                # Reset the environment to it's initial state
                 observation = self.env.reset()
 
                 # Because we are not working with a continous action space,
@@ -127,11 +133,15 @@ class HaroldAgent(object):
                     new_observation, reward, done, info = self.env.step(action)
 
                     score += reward
+
                     self.save(observation,
                               action,
                               reward,
                               new_observation,
                               done)
+
+                    observation = new_observation
+                    self.learn()
 
                     # break if we finish the environment
                     if done is True:
