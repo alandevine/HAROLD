@@ -31,8 +31,24 @@
                            <geom mesh="robot0:wrist_half_2" class="robot0:blue" material="robot0:base_mat" pos="0 675.5 0" quat="0.5 0.5 0.5 -0.5"></geom>
                            <joint name="robot0:wrist_joint" pos="0 675.5 0" axis="1 0 0" type="hinge"></joint>
                            <body name="robot0:hand">
-                              <geom mesh="robot0:gripper_bottom_plate" ></geom>
-                              <geom mesh="robot0:gripper_top_plate"></geom>
+                              <geom mesh="robot0:gripper_top_plate" pos="-30 766 -3" quat="0.707 -0.707 0 0"></geom>
+                              <geom mesh="robot0:gripper_bottom_plate" pos="30 766 3.6" quat="0 0 0.707 0.707"></geom>
+                              <body name="robot0:gripper_gear_a">
+                                 <geom mesh="robot0:servo_gear_a" pos="54.5 741 3.25" quat="0 0 -0.707 0.707"></geom>
+                                 <joint name="robot0:servo_gear_a" pos="14.5 741 3.25" type="hinge"></joint>
+                              </body>
+                              <body name="robot0:servo_gear_b">
+                                 <geom mesh="robot0:servo_gear_b" pos="-54.5 741 3.25" quat="0.707 -0.707 0 0"></geom>
+                                 <joint name="robot0:servo_gear_b" pos="-14.5 741 3.25" type="hinge"></joint>
+                              </body>
+                              <body name="robot0:pivot_arm_a">
+                                 <geom mesh="robot0:pivot_arm_b" pos="7 761 -3.25" quat="0.707 0.707 0 0"></geom>
+                                 <joint name="robot0:pivot_arm_a" pos="7 761 -3.25" type="hinge"></joint>
+                              </body>
+                              <body name="robot0:pivot_arm_b">
+                                 <geom mesh="robot0:pivot_arm_b" pos="-47 761 -3.25" quat="0.707 0.707 0 0"></geom>
+                                 <joint name="robot0:pivot_arm_b" pos="-7 761 -3.25" type="hinge"></joint>
+                              </body>
                            </body>
                         </body>
                      </body>
