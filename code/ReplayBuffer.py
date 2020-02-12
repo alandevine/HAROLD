@@ -8,15 +8,19 @@ from keras.optimizers import Adam
 
 
 class ReplayBuffer(object):
+
+    """Class for storing transitions from training"""
+
     def __init__(
                 self,
-                max_size,       #
-                input_shape,    #
+                memory_size,    #
+                input_shape,    # Shape of the matrix
                 n_actions,      # Number of actions availabe to Agent
-                discrete=False  #
+                discrete=False  # Boolean that corisponds to discrete
+                                # action spaces
             ):
 
-        self.memory_size = max_size
+        self.memory_size = memory_size
         self.input_shape = input_shape
         self.n_actions = n_actions
         self.discrete = discrete
@@ -24,7 +28,11 @@ class ReplayBuffer(object):
         self.state_memory = np.zeros((self.memory_size, self.input_shape))
         self.new_state_memory = np.zeros((self.memory_size, self.input_shape))
 
-        self.action_memory = np.zeros((self.memory_size, self.n_actions))
+        dtype = np.int8 if self.discrete else np.float32
+
+        self.action_memory = np.zeros(
+                    (self.memory_size, self.n_actions), dtype=dtype)
+
         self.reward_memory = np.zeros(self.memory_size)
         self.terminal_memory = np.zeros(self.memory_size, dtype=np.float32)
 
@@ -37,7 +45,7 @@ class ReplayBuffer(object):
             state     |
             action    |
             reward    |
-            new_state |
+            new_state | Numpy Array
             done      | Boolean Value
         """
 
@@ -72,7 +80,10 @@ class ReplayBuffer(object):
 
 def build_dqn(learning_rate, n_actions, input_dims, fc1_dims, fc2_dims):
 
-    """Function to create a deep q network"""
+    """Function to create a deep q network
+    Makes use of a Rectified Linear Unit approach as opposed to a sigmoid
+    function for modifying branch weights
+    """
 
     model = Sequential([
                 Dense(fc1_dims, input_shape=[input_dims, ]),
