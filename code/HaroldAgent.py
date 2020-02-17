@@ -8,7 +8,6 @@ from environment.harold_reach.envs.harold_reach_env.harold_reach import HaroldRe
 
 """
 TODO:
-    * Implement Hindsight Experince Replay in the learn method
     * Comment Code
     * Implement some form of training history, e.g.
         + Rewards given,
@@ -36,7 +35,8 @@ class HaroldAgent(object):
 
                 # Below values are subject to change
                 n_epochs=200,           # Number of epochs to be completed
-                n_episodes=80           # Number of episodes per epoch
+                n_episodes=80,          # Number of episodes per epoch
+                K=4                     # Number of random future states
             ):
 
         self.action_space = [i for i in range(n_actions)]
@@ -52,6 +52,7 @@ class HaroldAgent(object):
         self.env = HaroldReach()
         self.n_epochs = n_epochs
         self.n_episodes = n_episodes
+        self.K = K
 
         self.memory = ReplayBuffer(memory_size,
                                    input_dims,
@@ -85,7 +86,7 @@ class HaroldAgent(object):
         if self.memory.memory_counter < self.batch_size:
             return
 
-        return_vals = self.memory.sample_buffer(self.batch_size)
+        return_vals = self.memory.random_sample(self.batch_size)
         state, action, reward, new_state, done = return_vals
 
         action_values = np.array(self.action, dtype=np.int8)
@@ -119,6 +120,8 @@ class HaroldAgent(object):
                 done = False
                 score = 0
 
+                episode_experience = []
+
                 # Reset the environment to it's initial state
                 observation = self.env.reset()
 
@@ -134,11 +137,13 @@ class HaroldAgent(object):
 
                     score += reward
 
-                    self.save(observation,
-                              action,
-                              reward,
-                              new_observation,
-                              done)
+                    episode_experience.append((observation,
+                                               action,
+                                               reward,
+                                               new_observation,
+                                               done))
+
+                    self.save(episode_experience[-1])
 
                     observation = new_observation
                     self.learn()
@@ -146,6 +151,19 @@ class HaroldAgent(object):
                     # break if we finish the environment
                     if done is True:
                         break
+
+                for t in range(len(episode_experience)):
+                    for _ in range(self.K):
+                        future = np.random.randint(t, len(episode_experience))
+                        goal = episode_experience[future][3] # next_state of future
+                        state = episode_experience[t][0]
+                        action = episode_experience[t][1]
+                        next_state = episode_experience[t][3]
+                        done = np.array_equal(next_state, goal)
+                        reward = 0 if done else -1
+                        episode_experience_her = (state, action, reward, next_state, done, goal)
+
+                        self.save(episode_experience_her)
 
             # save model every 5 epochs
             # this is an arbitrary number and will change

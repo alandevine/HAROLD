@@ -65,7 +65,7 @@ class ReplayBuffer(object):
 
         self.memory_counter += 1
 
-    def sample_buffer(self, batch_size):
+    def random_sample(self, batch_size):
         max_memory = min(self.memory_counter, self.memory_size)
         batch = np.random.choice(max_memory, batch_size)
 
@@ -74,6 +74,15 @@ class ReplayBuffer(object):
         rewards = self.reward_memory[batch]
         actions = self.action_memory[batch]
         terminal = self.terminal_memory[batch]
+
+        return states, actions, rewards, new_states, terminal
+
+    def sample_buffer(self, index):
+        states = self.state_memory[index]
+        new_states = self.new_state_memory[index]
+        rewards = self.reward_memory[index]
+        actions = self.action_memory[index]
+        terminal = self.terminal_memory[index]
 
         return states, actions, rewards, new_states, terminal
 
