@@ -46,16 +46,15 @@
         <mesh file="TopPlateC.stl" name="robot0:gripper_top_plate"></mesh>
 
     </asset>
-
-    <!--    <equality>
-        <weld body1="robot0:mocap" body2="robot0:gripper_bottom_plate" solimp="0.9 0.95 0.001" solref="0.02 1"></weld>
+   
+    <equality>
+      <joint active="true" joint1="robot0:servo_gear_b" joint2="robot0:pivot_arm_b" polycoef="0 1 0 0 0"></joint>
+      <joint active="true" joint1="robot0:servo_gear_b" joint2="robot0:finger_left" polycoef="0 -1 0 0 0"></joint>
+      <joint active="true" joint1="robot0:servo_gear_a" joint2="robot0:pivot_arm_a" polycoef="0 1 0 0 0"></joint>
+      <joint active="true" joint1="robot0:servo_gear_a" joint2="robot0:finger_right" polycoef="0 -1 0 0 0"></joint>
+      <joint active="true" joint1="robot0:servo_gear_b" joint2="robot0:servo_gear_a" polycoef="0 -1 0 0 0"></joint>
     </equality>
-    
-    <contact>
-        <exclude body1="robot0:gripper_left" body2="robot0:gripper_right"></exclude>
-    </contact>
-   -->
-    
+
     <default>
         <default class="robot0:harold">
             <geom margin="0.001" material="robot0:geomMat" rgba="1 1 1 1" solimp="0.99 0.99 0.01" solref="0.01 1" type="mesh" user="0"></geom>
