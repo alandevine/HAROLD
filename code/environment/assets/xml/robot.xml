@@ -33,6 +33,7 @@
                            <body name="robot0:hand">
                               <geom mesh="robot0:gripper_top_plate" pos="-30 766 -3" quat="0.707 -0.707 0 0"></geom>
                               <geom mesh="robot0:gripper_bottom_plate" pos="30 766 3.6" quat="0 0 0.707 0.707"></geom>
+                              <site name="robot0:gripper"></site>
                               <body name="robot0:gripper_gear_a">
                                  <geom mesh="robot0:servo_gear_a" pos="54.5 741 3.25" quat="0 0 -0.707 0.707" gap="1"></geom>
                                  <joint name="robot0:servo_gear_a" pos="14.5 741 3.25" type="hinge"></joint>
