@@ -131,7 +131,7 @@ class HaroldEnv(robot_env.RobotEnv):
             object_velp = self.sim.data.get_site_xvelp('object0') * dt
             object_velr = self.sim.data.get_site_xvelr('object0') * dt
             # Gripper state
-            object_rel_pis = object_pos - grip_pos
+            object_rel_pos = object_pos - grip_pos
             object_velp -= grip_velp
         else:
             object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(3)
