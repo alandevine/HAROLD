@@ -9,36 +9,52 @@ from gym.utils import seeding
 from gym.envs.robotics import rotations, robot_env, utils
 
 def goal_distance(goal_a, goal_b):
-    assert goal_a.shape == goal_b.shape
-    return np.linalg.norm(goal_a - goal_b, axis=-1)
+    try:
+        assert goal_a.shape == goal_b.shape
+        return np.linalg.norm(goal_a - goal_b, axis=-1)
+    except AssertionError:
+        print("Goal A: [{}, {}]\nGoal B: [{}, {}]".format(goal_a, goal_a.shape, goal_b, goal_b.shape))
 
 class HaroldEnv(robot_env.RobotEnv):
     '''
     Superclass for all Harold Environments
     '''
 
-    def __init__(self, model_path, initial_qpos, n_actions, n_substeps, distance_threshold, reward_type):
+    def __init__(
+            self, model_path, has_object, block_gripper, n_substeps,
+            target_in_the_air, target_offset, obj_range, target_range,
+            distance_threshold, initial_qpos, reward_type, n_actions
+    ):
         '''
         Initialise a new Harold Environment
         
         __________
         Args:
-            model_path(string)          : Path to the xml files for the environment
-            initial_qpos(dict)          : Dictionary of joint names and values
-            n_actions(int)              : Number of actions to run
-            n_substeps(int)             : Number of substeps to run on each step
-            block_gripper(bool)         : Should the grippers be locked in place 
-            distance_threshold(float)   : Threshold after which the goal is considered achieved
-            reward_type(string)         : Reward type (sparse or dense)
+            model_path(String)          : Path to xml environment to load
+            has_object(Bool)            : State whether there is an object to load
+            block_gripper(Bool)         : State if the grippers can move or not
+            n_substeps(Int)             : Number of substeps to carry out for each step
+            target_in_the_air(Bool)     : State if the target can be in the air
+            target_offset(Float)        : Offset of the target
+            obj_range(Float)            : Range of uniform distribution for sampling the initial object positions
+            target_range(Float)         : Range of unifrom distribution for sampling the initial target position
+            distance_threshold(Float)   : How close the achieved goal must be to consider it successful
+            initial_qpos(Dict)          : Dictionary containing initial position of joints
+            reward_type(String)         : Which reward type to use (dense or sparse)
         '''
 
+        self.has_object = has_object
         self.block_gripper = block_gripper
+        self.target_in_the_air = target_in_the_air
+        self.target_offset = target_offset
+        self.obj_range = obj_range
+        self.target_range = target_range
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
+        self.n_actions = n_actions
 
         super(HaroldEnv, self).__init__(
-                model_path=model_path, initial_qpos=initial_qpos,
-                n_actions=n_actions,  initial_qpos=initial_qpos
+                model_path=model_path, initial_qpos=initial_qpos, n_actions=n_actions, n_substeps=n_substeps
         )
 
     '''
@@ -69,7 +85,7 @@ class HaroldEnv(robot_env.RobotEnv):
             self.sim.data.set_joint_qpos('robot0:servo_gear_a', 0.)
             self.sim.forward()
 
-    def _set_action(self):
+    def _set_action(self, action):
         '''
         Sets the action to apply to the simulation
         '''
@@ -80,11 +96,13 @@ class HaroldEnv(robot_env.RobotEnv):
 
         # Limit the maximum change in position
         pos_ctrl *= 0.05
-        gripper_ctrl = np.array([gripper_ctrl])
-        assert gripper_ctrl.shape == (1,)
+        # Fix roation of the hand, expressed as a quaterion
+        rot_ctrl = [1., 0., 1., 0.]
+        gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
+        assert gripper_ctrl.shape == (2,)
         if self.block_gripper:
             gripper_ctrl = np.zeros_like(gripper_ctrl)
-        action = np.concatenate([pos_ctrl, gripper_ctrl])
+        action = np.concatenate([pos_ctrl, rot_ctrl, gripper_ctrl])
 
         # Apply the action to the simulation
         utils.ctrl_set_action(self.sim, action)
@@ -113,16 +131,18 @@ class HaroldEnv(robot_env.RobotEnv):
             object_velp = self.sim.data.get_site_xvelp('object0') * dt
             object_velr = self.sim.data.get_site_xvelr('object0') * dt
             # Gripper state
-            object_rel_ois = object_pos - grip_pos
+            object_rel_pis = object_pos - grip_pos
             object_velp -= grip_velp
         else:
-            object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(0)
+            object_pos = object_rot = object_velp = object_velr = object_rel_pos = np.zeros(3)
         gripper_state = robot_qpos[-2:]
         # Change to a scalar if the gripper is symmetric
         gripper_vel = robot_qvel[-2:] * dt
 
         if not self.has_object:
             achieved_goal = np.squeeze(object_pos.copy())
+        else:
+            achieved_goal = np.squeexe(object_pos.copy())
         obs = np.concatenate([
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(),
             gripper_state, object_rot.ravel(), object_velp.ravel(),
@@ -130,8 +150,8 @@ class HaroldEnv(robot_env.RobotEnv):
         ])
 
         return {
-            'observation': obs.copy()
-            'achieved_goal': achieved_goal.copy()
+            'observation': obs.copy(),
+            'achieved_goal': achieved_goal.copy(),
             'desired_goal': self.goal.copy()
         }
 
@@ -139,13 +159,13 @@ class HaroldEnv(robot_env.RobotEnv):
         '''
         Setup viewer window for rendering environment
         '''
-        body_id = self.sim.model.body_name2id('robot0:gripper_bottom_plate')
+        body_id = self.sim.model.body_name2id('robot0:hand')
         lookat = self.sim.data.body_xpos[body_id]
         for idx, value in enumerate(lookat):
             self.viewer.cam.lookat[idx] = value
-        self.viewer.cam.distance = 2.5
-        self.viewer.cam.azimut = 132.
-        self.viewer.cam.elevation = -14.
+        self.viewer.cam.distance = 1000
+        self.viewer.cam.azimuth = 132.
+        self.viewer.cam.elevation = 500.
 
     def _render_callback(self):
         '''
@@ -166,7 +186,7 @@ class HaroldEnv(robot_env.RobotEnv):
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]
             while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.1:
-                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, size=2)
+                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
@@ -191,8 +211,8 @@ class HaroldEnv(robot_env.RobotEnv):
         return (d < self.distance_threshold).astype(np.float32)
 
     def _env_setup(self, initial_qpos):
-        for name, value in initial_qpos.item():
-            self.sim.data.set_joint_qpos(name, value)
+        for name in initial_qpos:
+            self.sim.data.set_joint_qpos(name, initial_qpos[name])
         utils.reset_mocap_welds(self.sim)
         self.sim.forward()
 
@@ -210,4 +230,4 @@ class HaroldEnv(robot_env.RobotEnv):
             self.height_offset = self.sim.data.get_site_xpos('object0')[2]
 
     def render(self, mode='human', width=500, height=500):
-        return super(FetchEnv, self).render(mode, width, height)
+        return super(HaroldEnv, self).render(mode, width, height)

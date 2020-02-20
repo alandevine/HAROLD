@@ -48,6 +48,7 @@
     </asset>
    
     <equality>
+      <weld body1="robot0:mocap" body2="robot0:hand" relpose="0 0 0 1 0 0 0"></weld>
       <joint active="true" joint1="robot0:servo_gear_b" joint2="robot0:pivot_arm_b" polycoef="0 1 0 0 0"></joint>
       <joint active="true" joint1="robot0:servo_gear_b" joint2="robot0:finger_left" polycoef="0 -1 0 0 0"></joint>
       <joint active="true" joint1="robot0:servo_gear_a" joint2="robot0:pivot_arm_a" polycoef="0 1 0 0 0"></joint>
