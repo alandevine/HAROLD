@@ -1,5 +1,4 @@
 import os
-import copy
 import numpy as np
 
 import gym
@@ -142,7 +141,7 @@ class HaroldEnv(robot_env.RobotEnv):
         if not self.has_object:
             achieved_goal = np.squeeze(object_pos.copy())
         else:
-            achieved_goal = np.squeexe(object_pos.copy())
+            achieved_goal = np.squeeze(object_pos.copy())
         obs = np.concatenate([
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(),
             gripper_state, object_rot.ravel(), object_velp.ravel(),
@@ -218,7 +217,7 @@ class HaroldEnv(robot_env.RobotEnv):
 
         # Move gripper into position
         gripper_target = np.array([-.498, .005, -.431]) + self.sim.data.get_site_xpos('robot0:gripper')
-        gripper_rotation = np.array([1., 0., 1., 0.]) 
+        gripper_rotation = np.array([0., 1., 1., 0.]) 
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
         for _ in range(10):

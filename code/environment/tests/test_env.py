@@ -4,12 +4,7 @@ import envs
 env= gym.make('HaroldReach-v0')
 
 observation = env.reset()
-for _ in range(1000):
+while True:
     env.render()
-    action = env.action_space.sample()
+    action = [0.0] * 7
     observation, reward, done, info = env.step(action)
-
-    if done:
-        observation = env.reset()
-
-env.close()
