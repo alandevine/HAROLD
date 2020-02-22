@@ -39,24 +39,24 @@
                                  <joint name="robot0:servo_gear_b" pos="40 0 -70" type="hinge" limited="true" range="-1.6 .6"></joint>
                                     <body name="robot0:finger_left" pos="13 -10 -6">
                                        <geom density="1240" mesh="robot0:gripper_left" quat=".5 .5 .5 .5"></geom>
-                                       <joint name="robot0:finger_left" pos="-13 10 -62.5" type="hinge"></joint>
+                                       <joint name="robot1:finger_left" pos="-13 10 -62.5" type="hinge"></joint>
                                     </body>
                               </body>
                               <body name="robot0:servo_gear_a" pos="54 -25 3">
                                  <geom density="1240" mesh="robot0:servo_gear_a" quat="0 0 .707 -.707" gap="100"></geom>
-                                 <joint name="robot0:servo_gear_a" pos="-40 0 -72.5" type="hinge"></joint>
+                                 <joint name="robot1:servo_gear_a" pos="-40 0 -72.5" type="hinge"></joint>
                                     <body name="robot0:finger_right" pos="-13 -10 6">
                                        <geom density="1240" mesh="robot0:gripper_right" quat=".5 -.5 -.5 .5"></geom>
-                                       <joint name="robot0:finger_right" type="hinge" pos="13 10 -75"></joint>
+                                       <joint name="robot1:finger_right" type="hinge" pos="13 10 -75"></joint>
                                     </body>
                               </body>
                               <body name="robot0:pivot_arm_a" pos="7 -5 -3.25">
                                  <geom density="1240" mesh="robot0:pivot_arm_b" quat="0.707 0.707 0 0" gap="100"></geom>
-                                 <joint name="robot0:pivot_arm_a" pos="0 0 -60" type="hinge"></joint>
+                                 <joint name="robot1:pivot_arm_a" pos="0 0 -60" type="hinge"></joint>
                               </body>
                               <body name="robot0:pivot_arm_b" pos="-47 -5 -3.25">
                                  <geom density="1240" mesh="robot0:pivot_arm_b" quat="0.707 0.707 0 0" gap="100"></geom>
-                                 <joint name="robot0:pivot_arm_b" pos="40 0 -60" type="hinge"></joint>
+                                 <joint name="robot1:pivot_arm_b" pos="40 0 -60" type="hinge"></joint>
                               </body>
                            </body>
                         </body>

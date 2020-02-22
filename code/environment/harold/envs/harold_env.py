@@ -8,11 +8,8 @@ from gym.utils import seeding
 from gym.envs.robotics import rotations, robot_env, utils
 
 def goal_distance(goal_a, goal_b):
-    try:
-        assert goal_a.shape == goal_b.shape
-        return np.linalg.norm(goal_a - goal_b, axis=-1)
-    except AssertionError:
-        print("Goal A: [{}, {}]\nGoal B: [{}, {}]".format(goal_a, goal_a.shape, goal_b, goal_b.shape))
+    assert goal_a.shape == goal_b.shape
+    return np.linalg.norm(goal_a - goal_b, axis=-1)
 
 class HaroldEnv(robot_env.RobotEnv):
     '''
@@ -81,7 +78,7 @@ class HaroldEnv(robot_env.RobotEnv):
         Locks grippers in place if the block_gripper flag is True
         '''
         if self.block_gripper:
-            self.sim.data.set_joint_qpos('robot0:servo_gear_a', 0.)
+            self.sim.data.set_joint_qpos('robot0:servo_gear_b', 0.)
             self.sim.forward()
 
     def _set_action(self, action):
@@ -96,9 +93,9 @@ class HaroldEnv(robot_env.RobotEnv):
         # Limit the maximum change in position
         pos_ctrl *= 0.05
         # Fix roation of the hand, expressed as a quaterion
-        rot_ctrl = [1., 0., 1., 0.]
-        gripper_ctrl = np.array([gripper_ctrl, gripper_ctrl])
-        assert gripper_ctrl.shape == (2,)
+        rot_ctrl = action[4:]
+        gripper_ctrl = np.array([gripper_ctrl])
+        assert gripper_ctrl.shape == (1,)
         if self.block_gripper:
             gripper_ctrl = np.zeros_like(gripper_ctrl)
         action = np.concatenate([pos_ctrl, rot_ctrl, gripper_ctrl])
@@ -163,16 +160,15 @@ class HaroldEnv(robot_env.RobotEnv):
         for idx, value in enumerate(lookat):
             self.viewer.cam.lookat[idx] = value
         self.viewer.cam.distance = 1000
-        self.viewer.cam.azimuth = 132.
-        self.viewer.cam.elevation = 500.
+        self.viewer.cam.azimuth = 450.
+        self.viewer.cam.elevation = 0.
 
     def _render_callback(self):
         '''
         Visualise Target
         '''
-        sites_offset = (self.sim.data.site_xpos - self.sim.model.site_pos).copy()
         site_id = self.sim.model.site_name2id('target0')
-        self.sim.model.site_pos[site_id] = self.goal - sites_offset[0]
+        self.sim.model.site_pos[site_id] = self.goal
         self.sim.forward()
 
     def _reset_sim(self):
@@ -202,7 +198,7 @@ class HaroldEnv(robot_env.RobotEnv):
             if self.target_int_the_air and self.np_random_uniform() < 0.5:
                 goal[2] += self.np_random.uniform(0, 0.45)
         else:
-            goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-0.15, 0.15, size=3)
+            goal = [0., 0., 0.] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
         return goal.copy()
 
     def _is_success(self, achieved_goal, desired_goal):
@@ -216,8 +212,8 @@ class HaroldEnv(robot_env.RobotEnv):
         self.sim.forward()
 
         # Move gripper into position
-        gripper_target = np.array([-.498, .005, -.431]) + self.sim.data.get_site_xpos('robot0:gripper')
-        gripper_rotation = np.array([0., 1., 1., 0.]) 
+        gripper_target = np.array([0.0, 0.0, 0.0]) + self.sim.data.get_site_xpos('robot0:gripper')
+        gripper_rotation = np.array([1., 0., 0., 0.]) 
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
         for _ in range(10):
