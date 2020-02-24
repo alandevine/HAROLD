@@ -25,7 +25,7 @@ class HaroldReach(harold_env.HaroldEnv, utils.EzPickle):
                 target_offset=0.0,
                 obj_range=250.0,
                 target_range=200.0,
-                distance_threshold=1,
+                distance_threshold=20,
                 initial_qpos=initial_qpos,
                 reward_type=reward_type,
                 n_actions=7

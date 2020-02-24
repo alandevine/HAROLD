@@ -79,6 +79,11 @@ class HaroldEnv(robot_env.RobotEnv):
         '''
         if self.block_gripper:
             self.sim.data.set_joint_qpos('robot0:servo_gear_b', 0.)
+            self.sim.data.set_joint_qpos('robot1:servo_gear_a', 0.)
+            self.sim.data.set_joint_qpos('robot1:finger_right', 0.)
+            self.sim.data.set_joint_qpos('robot1:finger_left',  0.)
+            self.sim.data.set_joint_qpos('robot1:pivot_arm_a',  0.)
+            self.sim.data.set_joint_qpos('robot1:pivot_arm_b',  0.)
             self.sim.forward()
 
     def _set_action(self, action):
@@ -91,13 +96,13 @@ class HaroldEnv(robot_env.RobotEnv):
         pos_ctrl, gripper_ctrl = action[:3], action[3]
 
         # Limit the maximum change in position
-        pos_ctrl *= 0.05
+        pos_ctrl *= 20
         # Fix roation of the hand, expressed as a quaterion
         rot_ctrl = action[4:]
         gripper_ctrl = np.array([gripper_ctrl])
         assert gripper_ctrl.shape == (1,)
         if self.block_gripper:
-            gripper_ctrl = np.zeros_like(gripper_ctrl)
+            gripper_ctrl = [0.0]
         action = np.concatenate([pos_ctrl, rot_ctrl, gripper_ctrl])
 
         # Apply the action to the simulation
@@ -198,7 +203,7 @@ class HaroldEnv(robot_env.RobotEnv):
             if self.target_int_the_air and self.np_random_uniform() < 0.5:
                 goal[2] += self.np_random.uniform(0, 0.45)
         else:
-            goal = [0., 0., 0.] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
+            goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
         return goal.copy()
 
     def _is_success(self, achieved_goal, desired_goal):
