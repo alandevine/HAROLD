@@ -1,75 +1,64 @@
 #!/usr/bin/python3
 
-import cv2
-import threading
+import asyncio
 import PIL
-from PIL import ImageTk
+import cv2
 import tkinter as tk
+from PIL import ImageTk
 
 
-class MainWindow:
+class GUI:
 
-    def __init__(self, name, height, width):
-        self.name = name
-        self.height = height
-        self.width = width
+    def __init__(self, win_name="Main", win_h=900, win_w=1600):
+        self.win_name = win_name
+        self.win_h = win_h
+        self.win_w = win_w
 
-        self.window = tk.Tk()
+        self.root = tk.Tk()
+        self.root.bind('<Escape>', lambda e: self.root.quit())
 
-        self.panel_cam_1 = None
-        self.panel_cam_2 = None
+        self.main_win = tk.Label(self.root)
+        self.main_win.pack()
 
-        self.window.title(self.name)
+    def show_frame(self, camera):
+        _, frame = camera.cam.read()
 
-        self.cam_view_1 = cv2.VideoCapture(0)
-        self.cam_view_2 = cv2.VideoCapture(1)
+        frame = cv2.flip(frame, 1)
 
-        cam_thread = threading.Thread(target=self.update_video, args=())
+        cv2_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        self.canvas = tk.Canvas(self.window,
-                                width=self.width,
-                                height=self.height)
+        img = PIL.Image.fromarray(cv2_frame)
+        img = ImageTk.PhotoImage(img)
 
-        self.canvas.pack()
+        self.main_win.imgtk = img
+        self.main_win.configure(image=img)
 
-        cam_thread.start()
+        self.main_win.after(10, self.show_frame, camera)
 
-        self.window.geometry("%dx%d" % (self.height, self.width))
+    def gui_loop(self):
+        self.root.mainloop()
 
-        self.window.mainloop()
 
-    def update_video(self):
-        while True:
-            ret_1, frame_1 = self.cam_view_1.read()
-            ret_2, frame_2 = self.cam_view_2.read()
+class Camera:
 
-            photo_1 = ImageTk.PhotoImage(image=PIL.Image.fromarray(frame_1))
-            photo_2 = ImageTk.PhotoImage(image=PIL.Image.fromarray(frame_2))
+    def __init__(self, camera_idx, view_h, view_w):
+        self.cam = cv2.VideoCapture(camera_idx)
+        self.cam.set(cv2.CAP_PROP_FRAME_HEIGHT, view_h)
+        self.cam.set(cv2.CAP_PROP_FRAME_WIDTH, view_w)
 
-            photo_1 = cv2.cvtColor(frame_1, cv2.COLOR_BGR2RGB)
-            photo_2 = cv2.cvtColor(frame_2, cv2.COLOR_BGR2RGB)
-
-            if self.panel_cam_1 is None:
-                self.panel_cam_1 = tk.Label(image=photo_1)
-                self.panel_cam_1.image = photo_1
-                self.panel_cam_1.pack(side="left", padx=10, pady=10)
-
-            else:
-                self.panel_cam_1.configure(image=photo_1)
-                self.panel_cam_1.image = photo_1
-
-            if self.panel_cam_2 is None:
-                self.panel_cam_2 = tk.Label(image=photo_2)
-                self.panel_cam_2.image = photo_2
-                self.panel_cam_2.pack(side="right", padx=10, pady=10)
-
-            else:
-                self.panel_cam_2panel.configure(image=photo_2)
-                self.panel_cam_2.image = photo_2
+    def __del__(self):
+        self.cam.release()
 
 
 def main():
-    window = MainWindow("test", 1600, 900)
+    try:
+        root = GUI("test")
+        cam = Camera(0, 450, 800)
+        root.show_frame(cam)
+        root.gui_loop()
+
+    except KeyboardInterrupt:
+        quit()
 
 
 if __name__ == "__main__":
