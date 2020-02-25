@@ -4,7 +4,9 @@ import numpy as np
 
 from keras.models import load_model
 from ReplayBuffer import ReplayBuffer, build_dqn
-from environment.harold_reach.envs.harold_reach_env.harold_reach import HaroldReach
+
+import gym
+import envs
 
 """
 TODO:
@@ -48,8 +50,9 @@ class HaroldAgent(object):
         self.epsilon_min = epsilon_min
         self.batch_size = batch_size
         self.model_file = file_name
+        self.time_step=50
 
-        self.env = HaroldReach()
+        self.env = gym.make('HaroldReach-v0')
         self.n_epochs = n_epochs
         self.n_episodes = n_episodes
         self.K = K
@@ -66,6 +69,7 @@ class HaroldAgent(object):
         self.memory.store_transition(state, action, reward, new_state, done)
 
     def act(self, state):
+        state = np.asarray(state)
         state = state[np.newaxis, :]
 
         # Generate random value to see if we will take a random action
@@ -124,6 +128,7 @@ class HaroldAgent(object):
 
                 # Reset the environment to it's initial state
                 observation = self.env.reset()
+                observation = self.env.initial_state
 
                 # Because we are not working with a continous action space,
                 # we are limiting ourselfs to a finite number of timesteps
@@ -132,6 +137,7 @@ class HaroldAgent(object):
 
                 for _ in range(self.time_step):
 
+                    self.env.render()
                     action = self.act(observation)
                     new_observation, reward, done, info = self.env.step(action)
 
