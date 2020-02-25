@@ -94,14 +94,14 @@ def build_dqn(learning_rate, n_actions, input_dims, fc1_dims, fc2_dims):
     function for modifying branch weights
     """
 
-    model = Sequential([
-                Dense(fc1_dims, input_shape=[input_dims, ]),
-                Activation("relu"),
-                Dense(fc2_dims),
-                Activation("relu"),
-                Dense(n_actions)
-        ])
+    model = Sequential()
+    model.add(Dense(fc1_dims, input_shape=[input_dims, ]))
+    model.add(Activation("relu"))
+    model.add(Dense(fc2_dims))
+    model.add(Activation("relu"))
+    model.add(Dense(n_actions))
 
-    model = compile(optimizer=Adam(lr=learning_rate), loss="mse")
+    optimizer = Adam(lr=learning_rate)
+    model.compile(optimizer=optimizer, loss="mse")
 
     return model
