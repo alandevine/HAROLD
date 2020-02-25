@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import asyncio
 import PIL
 import cv2
 import tkinter as tk
