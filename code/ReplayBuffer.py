@@ -50,8 +50,8 @@ class ReplayBuffer(object):
         """
 
         index = self.memory_counter % self.memory_size
-        self.state_memory[index] = state
-        self.new_state_memory[index] = new_state
+        self.state_memory[index] = np.reshape(state,25)
+        self.new_state_memory[index] = new_state.T
         self.reward_memory[index] = reward
         self.terminal_memory[index] = 1 - int(done)
 
@@ -84,7 +84,7 @@ class ReplayBuffer(object):
         actions = self.action_memory[index]
         terminal = self.terminal_memory[index]
 
-        return states, actions, rewards, new_states, terminal
+        return np.reshape(states,(25,1)), actions, rewards, np.reshape(new_states,(25,1)), terminal
 
 
 def build_dqn(learning_rate, n_actions, input_dims, fc1_dims, fc2_dims):

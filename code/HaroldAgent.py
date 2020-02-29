@@ -8,6 +8,8 @@ from ReplayBuffer import ReplayBuffer, build_dqn
 import gym
 import envs
 
+from gym.wrappers import FlattenObservation, FilterObservation
+
 """
 TODO:
     * Comment Code
@@ -30,7 +32,7 @@ class HaroldAgent(object):
                 epsilon,                # Random Factor
                 batch_size,             # 
                 input_dims,             # D
-                epsilon_dec=0.996,      # Rate at which the epsilon value decreases
+                epsilon_dec=0.9999,      # Rate at which the epsilon value decreases
                 epsilon_min=0.1,        # Value at which epsilon stops decrementing
                 memory_size=1000000,    # Maximum size of alotted memory
                 file_name="harold_dqn", # File name for the model
@@ -60,7 +62,7 @@ class HaroldAgent(object):
         self.memory = ReplayBuffer(memory_size,
                                    input_dims,
                                    n_actions,
-                                   discrete=True)
+                                   discrete=False)
 
         self.q_eval = build_dqn(alpha, n_actions, input_dims, 256, 256)
 
@@ -77,11 +79,14 @@ class HaroldAgent(object):
 
         if random_epsilon < self.epsilon:
             # Select random action
-            action = np.random.choice(self.action_space)
+            action = self.env.action_space.sample()
+#            action = np.random.choice(self.action_space)
         else:
-            actions = self.q_eval.predict(state)
+            action = self.q_eval.predict(state)[0]
+            action *= 0.001
+            print('HEHRE IST IS:', action)
             # Select an action of the highest value
-            action = np.argmax(actions)
+            #action = actions[np.argmax(actions)]
 
         return action
 
@@ -90,14 +95,15 @@ class HaroldAgent(object):
         if self.memory.memory_counter < self.batch_size:
             return
 
-        return_vals = self.memory.random_sample(self.batch_size)
+        #return_vals = self.memory.random_sample(self.batch_size)
+        return_vals = self.memory.sample_buffer(-1)
         state, action, reward, new_state, done = return_vals
 
         action_values = np.array(action, dtype=np.int8)
-        action_indices = np.dot(action, action_values.T)
+        action_indices = int(np.dot(action.T, action_values))
 
-        q_eval = self.q_eval.predict(state)
-        q_next = self.q_eval.predict(new_state)
+        q_eval = self.q_eval.predict(state.T)
+        q_next = self.q_eval.predict(new_state.T)
 
         q_target = q_eval.copy()
 
@@ -107,9 +113,9 @@ class HaroldAgent(object):
         q_target[batch_index, action_indices] = (reward
                                                  + self.gamma
                                                  * np.max(q_next, axis=1)
-                                                 * done)
+                                                 * int(done))
 
-        _ = self.q_eval.fit(state, q_target, verbose=0)
+        _ = self.q_eval.fit(state.T, q_target, verbose=0)
 
         # Decrement epsilon value by the gradient decent value
         if self.epsilon > self.epsilon_min:
@@ -128,6 +134,7 @@ class HaroldAgent(object):
 
                 # Reset the environment to it's initial state
                 observation = self.env.reset()
+                observation = FlattenObservation(FilterObservation(observation,['observation','achieved_goal','desired_goal']))
 
                 # Because we are not working with a continous action space,
                 # we are limiting ourselfs to a finite number of timesteps
@@ -138,14 +145,15 @@ class HaroldAgent(object):
 
                     self.env.render()
                     action = self.act(observation['observation'])
+                    print(action)
                     new_observation, reward, done, info = self.env.step(action)
 
                     score += reward
 
-                    episode_experience.append((observation,
+                    episode_experience.append((observation['observation'],
                                                action,
                                                reward,
-                                               new_observation,
+                                               new_observation['observation'],
                                                done))
 
                     self.save(np.asarray(observation['observation']),action,reward,new_observation['observation'],done)
@@ -167,7 +175,7 @@ class HaroldAgent(object):
                         done = np.array_equal(next_state, goal)
                         reward = 0 if done else -1
 
-                        self.save(state, action, reward, next_state, done, goal)
+                        self.save(state, action, reward, next_state, done)
 
             # save model every 5 epochs
             # this is an arbitrary number and will change

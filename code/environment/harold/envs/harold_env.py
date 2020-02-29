@@ -141,7 +141,7 @@ class HaroldEnv(robot_env.RobotEnv):
         gripper_vel = robot_qvel[-2:] * dt
 
         if not self.has_object:
-            achieved_goal = np.squeeze(object_pos.copy())
+            achieved_goal = np.squeeze(self.sim.data.get_site_xpos('robot0:gripper').copy())
         else:
             achieved_goal = np.squeeze(object_pos.copy())
         obs = np.concatenate([
