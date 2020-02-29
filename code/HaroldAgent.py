@@ -166,9 +166,8 @@ class HaroldAgent(object):
                         next_state = episode_experience[t][3]
                         done = np.array_equal(next_state, goal)
                         reward = 0 if done else -1
-                        episode_experience_her = (state, action, reward, next_state, done, goal)
 
-                        self.save(episode_experience_her)
+                        self.save(state, action, reward, next_state, done, goal)
 
             # save model every 5 epochs
             # this is an arbitrary number and will change
