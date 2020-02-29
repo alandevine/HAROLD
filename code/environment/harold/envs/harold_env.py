@@ -193,7 +193,8 @@ class HaroldEnv(robot_env.RobotEnv):
             self.sim.data.set_joint_qpos('object0:joint', object_qpos)
 
         self.sim.forward()
-        return True
+        obs = self._get_obs()
+        return obs
 
     def _sample_goal(self):
         if self.has_object:

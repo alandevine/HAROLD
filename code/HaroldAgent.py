@@ -93,8 +93,8 @@ class HaroldAgent(object):
         return_vals = self.memory.random_sample(self.batch_size)
         state, action, reward, new_state, done = return_vals
 
-        action_values = np.array(self.action, dtype=np.int8)
-        action_indices = np.dot(action, action_values)
+        action_values = np.array(action, dtype=np.int8)
+        action_indices = np.dot(action, action_values.T)
 
         q_eval = self.q_eval.predict(state)
         q_next = self.q_eval.predict(new_state)
@@ -128,7 +128,6 @@ class HaroldAgent(object):
 
                 # Reset the environment to it's initial state
                 observation = self.env.reset()
-                observation = self.env.initial_state
 
                 # Because we are not working with a continous action space,
                 # we are limiting ourselfs to a finite number of timesteps
@@ -138,7 +137,7 @@ class HaroldAgent(object):
                 for _ in range(self.time_step):
 
                     self.env.render()
-                    action = self.act(observation)
+                    action = self.act(observation['observation'])
                     new_observation, reward, done, info = self.env.step(action)
 
                     score += reward
@@ -149,7 +148,7 @@ class HaroldAgent(object):
                                                new_observation,
                                                done))
 
-                    self.save(episode_experience[-1])
+                    self.save(np.asarray(observation['observation']),action,reward,new_observation['observation'],done)
 
                     observation = new_observation
                     self.learn()
