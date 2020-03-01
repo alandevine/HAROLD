@@ -54,9 +54,41 @@ class GUI:
     def show_frame(self, camera, label):
         _, frame = camera.cam.read()
 
-        cv2_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        img = PIL.Image.fromarray(cv2_frame)
+        diff = cv2.absdiff(camera.static_background, frame)
+        gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(src=gray, ksize=(5, 5), sigmaX=0)
+
+        _, thresh = cv2.threshold(src=blur,
+                                  thresh=70,
+                                  maxval=255,
+                                  type=cv2.THRESH_BINARY)
+
+        dilated = cv2.dilate(thresh, kernel=None, iterations=3)
+
+        contours, _ = cv2.findContours(image=dilated,
+                                       mode=cv2.RETR_TREE,
+                                       method=cv2.CHAIN_APPROX_SIMPLE)
+
+        for contour in contours:
+            (x, y, w, h) = cv2.boundingRect(contour)
+            if cv2.contourArea(contour) < 900:
+                continue
+
+            cv2.rectangle(frame,
+                          pt1=(x, y),
+                          pt2=(x + w, y + h),
+                          color=(255, 0, 0),
+                          thickness=2)
+
+            cv2.circle(frame,
+                       center=(x + w // 2, y + h // 2),
+                       radius=5,
+                       color=(255, 0, 0),
+                       thickness=2)
+
+        img = PIL.Image.fromarray(frame)
         img = ImageTk.PhotoImage(img)
 
         label.imgtk = img
@@ -103,6 +135,13 @@ def main():
         cam_2 = Camera(camera_idx=1,
                        camera_view="FRONT-ON",
                        view_h=450, view_w=800)
+
+        input("Clear background, press 'Enter' to continue...")
+        _, frame1 = cam_1.cam.read()
+        _, frame2 = cam_2.cam.read()
+
+        cam_1.static_background = frame1
+        cam_2.static_background = frame2
 
         root.show_frame(cam_1, root.cam_1_win)
         root.show_frame(cam_2, root.cam_2_win)
