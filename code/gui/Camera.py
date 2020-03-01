@@ -35,6 +35,8 @@ class Camera:
 
         self.origin_distance = origin_distance
 
+        self.static_background = None
+
     def object_vector(self, object_x, object_y):
         """Method for determining the vector between the mid
         point of the screen"""
