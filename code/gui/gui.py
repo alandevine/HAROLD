@@ -1,18 +1,23 @@
 #!/usr/bin/python3
 
-from Camera import Camera
-from PIL import ImageTk
-from tkinter import ttk
 import PIL
 import cv2
 import tkinter as tk
+from Camera import Camera
+from PIL import ImageTk
+from tkinter import ttk
 
 
 class GUI:
+    """Main Class for the User Interface"""
 
     def __init__(self, win_name="Main", win_h=900, win_w=1600):
         self.win_name = win_name
+
+        # vertical resolution
         self.win_h = win_h
+
+        # horizontal resolution
         self.win_w = win_w
 
         self.root = tk.Tk()
@@ -21,6 +26,7 @@ class GUI:
         # bind 'escape' to quit gui
         self.root.bind("<Escape>", lambda e: self.root.quit())
 
+        # Creates a window with in the root
         self.main_win = tk.Label(self.root)
 
         # set default resolution of window
@@ -30,11 +36,14 @@ class GUI:
         self.cam_1_win = tk.Label(self.main_win)
         self.cam_2_win = tk.Label(self.main_win)
 
+        # list of buttons that interact with a dictionary
         self.object_grid = tk.Label(self.main_win)
         self.object_title = tk.Label(self.object_grid, text="Detected Objects")
 
+        # apply window components to the main window
         self.main_win.pack()
 
+        # apply styling to camera windows while applying them to main window
         self.cam_1_win.pack(padx=20, pady=20, side=tk.LEFT)
         self.cam_2_win.pack(padx=20, pady=20, side=tk.RIGHT)
 
@@ -52,44 +61,21 @@ class GUI:
         self.update_object_list()
 
     def show_frame(self, camera, label):
+        """Method for showing a single camera frame
+        in addition to showing a frame, the detected objects (objects that
+        do not apear in the background frame defined in the Camera class
+        will be given a bounding box as well as centroid
+
+        This method will call itself after 100ms
+        """
+
         _, frame = camera.cam.read()
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        diff = cv2.absdiff(camera.static_background, frame)
-        gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-        blur = cv2.GaussianBlur(src=gray, ksize=(5, 5), sigmaX=0)
+        bounding_box_frame = camera.draw_bounding_boxs(frame)
 
-        _, thresh = cv2.threshold(src=blur,
-                                  thresh=70,
-                                  maxval=255,
-                                  type=cv2.THRESH_BINARY)
-
-        dilated = cv2.dilate(thresh, kernel=None, iterations=3)
-
-        contours, _ = cv2.findContours(image=dilated,
-                                       mode=cv2.RETR_TREE,
-                                       method=cv2.CHAIN_APPROX_SIMPLE)
-
-        for contour in contours:
-            (x, y, w, h) = cv2.boundingRect(contour)
-            if cv2.contourArea(contour) < 900:
-                continue
-
-            cv2.rectangle(frame,
-                          pt1=(x, y),
-                          pt2=(x + w, y + h),
-                          color=(255, 0, 0),
-                          thickness=2)
-
-            cv2.circle(frame,
-                       center=(x + w // 2, y + h // 2),
-                       radius=5,
-                       color=(255, 0, 0),
-                       thickness=2)
-
-        img = PIL.Image.fromarray(frame)
-        img = ImageTk.PhotoImage(img)
+        img = ImageTk.PhotoImage(PIL.Image.fromarray(bounding_box_frame))
 
         label.imgtk = img
         label.configure(image=img)
