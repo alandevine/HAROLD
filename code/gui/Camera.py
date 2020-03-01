@@ -19,7 +19,9 @@ class Camera:
             res_x: refers to camera's verical resolution
             view_h: height of the camera view window
             view_w: width of the camera view window
-            origin_distance: distance between camera and origin in mm
+            origin_distance: distance between camera and origin in cm
+            static_background: backgroud for which newly drawn frames are
+                               diffed against for detecting objects
         """
 
         self.cam = cv2.VideoCapture(camera_idx)
@@ -55,6 +57,46 @@ class Camera:
             z = object_y - self.cam.res_y // 2
 
         return (x, y, z)
+
+    def draw_bounding_boxs(self, frame):
+
+        """Method for drawing bounding boxes arround objects different to the
+        static background
+        """
+
+        diff = cv2.absdiff(self.static_background, frame)
+        gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(src=gray, ksize=(5, 5), sigmaX=0)
+
+        _, thresh = cv2.threshold(src=blur,
+                                  thresh=70,
+                                  maxval=255,
+                                  type=cv2.THRESH_BINARY)
+
+        dilated = cv2.dilate(src=thresh, kernel=None, iterations=3)
+
+        contours, _ = cv2.findContours(image=dilated,
+                                       mode=cv2.RETR_TREE,
+                                       method=cv2.CHAIN_APPROX_SIMPLE)
+
+        for contour in contours:
+            (x, y, w, h) = cv2.boundingRect(contour)
+            if cv2.contourArea(contour) < 900:
+                continue
+
+            cv2.rectangle(img=frame,
+                          pt1=(x, y),
+                          pt2=(x + w, y + h),
+                          color=(255, 0, 0),
+                          thickness=2)
+
+            cv2.circle(img=frame,
+                       center=(x + w // 2, y + h // 2),
+                       radius=5,
+                       color=(255, 0, 0),
+                       thickness=2)
+
+        return frame
 
     def __del__(self):
         self.cam.release()
