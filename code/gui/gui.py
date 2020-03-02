@@ -4,6 +4,7 @@ import PIL
 import cv2
 import tkinter as tk
 from Camera import Camera
+from collections import defaultdict
 from PIL import ImageTk
 from tkinter import ttk
 
@@ -50,7 +51,7 @@ class GUI:
         self.object_grid.pack()
         self.object_title.pack()
 
-        self.object_dict = {}
+        self.object_dict = defaultdict(tuple)
         self.object_list = []
 
         self.object_dict["foo"] = ["bar"]
@@ -73,7 +74,17 @@ class GUI:
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        bounding_box_frame = camera.draw_bounding_boxs(frame)
+        bounding_box_frame, objects = camera.draw_bounding_boxs(frame)
+
+        for k, v in objects.items():
+            # object id's ar distributed left to right of the given frame
+
+            if self.object_dict[k]:
+                partial_vector = self.object_dict[k]
+                self.object_dict[k] = Camera.merge_vectors(partial_vector, v)
+
+            else:
+                self.object_dict[k] = v
 
         img = ImageTk.PhotoImage(PIL.Image.fromarray(bounding_box_frame))
 

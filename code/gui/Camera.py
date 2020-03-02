@@ -45,18 +45,18 @@ class Camera:
         """Method for determining the vector between the mid
         point of the screen"""
 
-        y = object_x - self.cam.res_x // 2
+        y = object_x - self.res_x // 2
 
         # There may be a bit of confusion arround the variable names
         # the assigned x, y and z refer to vector co-ordinates. Otherwise
         # I am refering to the x, y position in the camera view
 
         if self.camera_view == "TOP-DOWN":
-            x = object_y - self.cam.res_y // 2
+            x = object_y - self.res_y // 2
             z = None
         else:
             x = None
-            z = object_y - self.cam.res_y // 2
+            z = object_y - self.res_y // 2
 
         return (x, y, z)
 
@@ -104,7 +104,7 @@ class Camera:
                        color=(255, 0, 0),
                        thickness=2)
 
-            object_dict[obj_id] = centroid
+            object_dict[obj_id] = self.object_vector(centroid[0], centroid[1])
 
         return frame, object_dict
 
@@ -112,7 +112,7 @@ class Camera:
         self.cam.release()
 
     @staticmethod
-    def merge_vectors(self, vector_a, vector_b):
+    def merge_vectors(vector_a, vector_b):
         """Static method for merging 2 given vectors
         inputs come in tuple form with the assumption that both x values
         will be equal, due to the decided upon camera layout.
