@@ -2,6 +2,7 @@
 
 import cv2
 from math import sqrt
+from collections import defaultdict
 
 
 class Camera:
@@ -36,6 +37,7 @@ class Camera:
         self.res_y = res_y
 
         self.origin_distance = origin_distance
+        self.pixle_cm_ratio = 0
 
         self.static_background = None
 
@@ -79,24 +81,32 @@ class Camera:
                                        mode=cv2.RETR_TREE,
                                        method=cv2.CHAIN_APPROX_SIMPLE)
 
-        for contour in contours:
+        object_dict = defaultdict(tuple)
+
+        for i, contour in enumerate(contours):
+            obj_id = i + 1
+
             (x, y, w, h) = cv2.boundingRect(contour)
             if cv2.contourArea(contour) < 900:
                 continue
 
+            centroid = x + w // 2, y + h // 2
+
             cv2.rectangle(img=frame,
-                          pt1=(x, y),
-                          pt2=(x + w, y + h),
+                          pt1=(x, y),           # bottom left coord
+                          pt2=(x + w, y + h),   # top right coord
                           color=(255, 0, 0),
                           thickness=2)
 
             cv2.circle(img=frame,
-                       center=(x + w // 2, y + h // 2),
+                       center=(centroid),
                        radius=5,
                        color=(255, 0, 0),
                        thickness=2)
 
-        return frame
+            object_dict[obj_id] = centroid
+
+        return frame, object_dict
 
     def __del__(self):
         self.cam.release()
