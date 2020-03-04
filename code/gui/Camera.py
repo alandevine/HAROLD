@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
 import cv2
+import numpy as np
 from math import sqrt
-from collections import defaultdict
+from centroid_tracker import CentroidTracker
 
 
 class Camera:
@@ -40,10 +41,16 @@ class Camera:
         self.pixle_cm_ratio = 0
 
         self.static_background = None
+        self.centroid_tracker = CentroidTracker()
 
-    def object_vector(self, object_x, object_y):
+    def object_vector(self, centroid):
         """Method for determining the vector between the mid
         point of the screen"""
+
+        object_x = centroid[0]
+        object_y = centroid[1]
+
+        print("cam.objvec>>", object_x, object_y)
 
         y = object_x - self.res_x // 2
 
@@ -70,6 +77,8 @@ class Camera:
         gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(src=gray, ksize=(5, 5), sigmaX=0)
 
+        rects = []
+
         _, thresh = cv2.threshold(src=blur,
                                   thresh=70,
                                   maxval=255,
@@ -81,12 +90,13 @@ class Camera:
                                        mode=cv2.RETR_TREE,
                                        method=cv2.CHAIN_APPROX_SIMPLE)
 
-        object_dict = defaultdict(tuple)
-
         for i, contour in enumerate(contours):
-            obj_id = i + 1
 
             (x, y, w, h) = cv2.boundingRect(contour)
+
+            box_bounds = np.array([x, x + w, y, y + h])
+            rects.append(box_bounds)
+
             if cv2.contourArea(contour) < 900:
                 continue
 
@@ -104,7 +114,20 @@ class Camera:
                        color=(255, 0, 0),
                        thickness=2)
 
-            object_dict[obj_id] = self.object_vector(centroid[0], centroid[1])
+        object_dict = self.centroid_tracker.update_objects(rects)
+
+        for obj_id, centroid in object_dict.items():
+            text = "ID %s" % {obj_id}
+
+            cv2.putText(frame,
+                        text,
+                        (centroid[0] - 10, centroid[1] - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5,
+                        (0, 255, 0),
+                        2)
+
+            cv2.circle(frame, (centroid[0], centroid[1]), 4, (0, 255, 0), -1)
 
         return frame, object_dict
 

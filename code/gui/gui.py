@@ -4,12 +4,12 @@ import PIL
 import cv2
 import tkinter as tk
 from Camera import Camera
-from collections import defaultdict
+from collections import OrderedDict
 from PIL import ImageTk
 from tkinter import ttk
 
 
-class GUI:
+class MainWindow:
     """Main Class for the User Interface"""
 
     def __init__(self, win_name="Main", win_h=900, win_w=1600):
@@ -51,7 +51,7 @@ class GUI:
         self.object_grid.pack()
         self.object_title.pack()
 
-        self.object_dict = defaultdict(tuple)
+        self.object_dict = OrderedDict()
         self.object_list = []
 
         self.object_dict["foo"] = ["bar"]
@@ -74,19 +74,20 @@ class GUI:
 
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        bounding_box_frame, objects = camera.draw_bounding_boxs(frame)
+        if camera.static_background is not None:
+            frame, objects = camera.draw_bounding_boxs(frame)
 
-        for k, v in objects.items():
-            # object id's ar distributed left to right of the given frame
+            for k, v in objects.items():
+                # object id's are distributed left to right of the given frame
 
-            if self.object_dict[k]:
-                partial_vector = self.object_dict[k]
-                self.object_dict[k] = Camera.merge_vectors(partial_vector, v)
+                if k in self.object_dict.keys():
+                    # if there is already a vector with this id
+                    self.object_dict[k] = v
 
-            else:
-                self.object_dict[k] = v
+                else:
+                    self.object_dict[k] = v
 
-        img = ImageTk.PhotoImage(PIL.Image.fromarray(bounding_box_frame))
+        img = ImageTk.PhotoImage(PIL.Image.fromarray(frame))
 
         label.imgtk = img
         label.configure(image=img)
@@ -120,16 +121,16 @@ class GUI:
 
 def main():
     try:
-        root = GUI("H.A.R.O.L.D")
+        root = MainWindow("H.A.R.O.L.D")
 
-        cam_1 = Camera(camera_idx=0,
+        cam_1 = Camera(camera_idx=2,
 
                        # This should be replaced with an init function
                        # when gui is launched due to usb device priority
                        camera_view="TOP-DOWN",
                        view_h=450, view_w=800)
 
-        cam_2 = Camera(camera_idx=1,
+        cam_2 = Camera(camera_idx=3,
                        camera_view="FRONT-ON",
                        view_h=450, view_w=800)
 
