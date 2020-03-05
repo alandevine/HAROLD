@@ -1,4 +1,5 @@
-# import the necessary packages
+#!/usr/bin/python3
+
 from scipy.spatial import distance as dist
 from collections import OrderedDict
 import numpy as np
@@ -6,7 +7,7 @@ import numpy as np
 
 class CentroidTracker():
 
-    def __init__(self, frame_threshold=48):
+    def __init__(self, frame_threshold=20):
 
         # unique object id
         self.current_obj_id = 0
@@ -19,7 +20,7 @@ class CentroidTracker():
         self.frames_elapsed = OrderedDict()
 
         # number of frames an object can be out of view before being deleted
-        # the default being 48 frames which roughly corisponds to 2 seconds
+        # the default being 48 frames which roughly corresponds to 2 seconds
         self.frame_threshold = frame_threshold
 
     def add_object(self, centroid):
@@ -28,13 +29,12 @@ class CentroidTracker():
         self.current_obj_id += 1
 
     def del_object(self, obj_id):
-        # to del_object an object ID we delete the object ID from
-        # both of our respective dictionaries
+        # delete objects from both dictionary's
         del self.objects[obj_id]
         del self.frames_elapsed[obj_id]
 
     def increment_frame(self, obj_id):
-        self.frame_threshold[obj_id] += 1
+        self.frames_elapsed[obj_id] += 1
         if self.frames_elapsed[obj_id] > self.frame_threshold:
             self.del_object(obj_id)
 
@@ -53,11 +53,11 @@ class CentroidTracker():
         new_centroids = np.zeros((len(rects), 2), dtype="int")
 
         # loop over the bounding box rectangles
-        for (i, (startX, startY, endX, endY)) in enumerate(rects):
+        for i, (x1, x2, y1, y2) in enumerate(rects):
             # use the bounding box coordinates to derive the centroid
-            cX = int((startX + endX) / 2.0)
-            cY = int((startY + endY) / 2.0)
-            new_centroids[i] = (cX, cY)
+            n_x = (x1 + x2) // 2
+            n_y = (y1 + y2) // 2
+            new_centroids[i] = (n_x, n_y)
 
         # if we are currently not tracking any objects take the input
         # centroids and add_object each of them

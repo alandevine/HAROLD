@@ -12,17 +12,17 @@ class Camera:
     Default values based on Playstation Eye camera"""
 
     def __init__(self, camera_idx, camera_view, res_x=640, res_y=480,
-                 view_h=450, view_w=800, origin_distance=0):
+                 view_h=450, view_w=800, origin_distance=0, static_background=None):
 
         """
             camera_idx: refers to the device number
             camera_view: can either be "TOP-DOWN" or "FRONT-ON"
             res_x: refers to camera's horisontal resolution
-            res_x: refers to camera's verical resolution
+            res_x: refers to camera's vertical resolution
             view_h: height of the camera view window
             view_w: width of the camera view window
             origin_distance: distance between camera and origin in cm
-            static_background: backgroud for which newly drawn frames are
+            static_background: background for which newly drawn frames are
                                diffed against for detecting objects
         """
 
@@ -38,9 +38,9 @@ class Camera:
         self.res_y = res_y
 
         self.origin_distance = origin_distance
-        self.pixle_cm_ratio = 0
+        self.pixel_cm_ratio = 0
 
-        self.static_background = None
+        self.static_background = static_background
         self.centroid_tracker = CentroidTracker()
 
     def object_vector(self, centroid):
@@ -50,11 +50,9 @@ class Camera:
         object_x = centroid[0]
         object_y = centroid[1]
 
-        print("cam.objvec>>", object_x, object_y)
-
         y = object_x - self.res_x // 2
 
-        # There may be a bit of confusion arround the variable names
+        # There may be a bit of confusion around the variable names
         # the assigned x, y and z refer to vector co-ordinates. Otherwise
         # I am refering to the x, y position in the camera view
 
@@ -69,7 +67,7 @@ class Camera:
 
     def draw_bounding_boxs(self, frame):
 
-        """Method for drawing bounding boxes arround objects different to the
+        """Method for drawing bounding boxes around objects different to the
         static background
         """
 
@@ -94,13 +92,18 @@ class Camera:
 
             (x, y, w, h) = cv2.boundingRect(contour)
 
-            box_bounds = np.array([x, x + w, y, y + h])
-            rects.append(box_bounds)
-
+            # in the case that the area of the difference is to small, i.e.
+            # inconsistencies due to lighting, the loop will continue to the
+            # next iteration
             if cv2.contourArea(contour) < 900:
                 continue
 
-            centroid = x + w // 2, y + h // 2
+            # create numpy array out of each corner of the bounding box
+            box_bounds = np.array([x, x + w, y, y + h])
+            rects.append(box_bounds)
+
+            # coordinates of the centroid
+            centroid = (x + w // 2, y + h // 2)
 
             cv2.rectangle(img=frame,
                           pt1=(x, y),           # bottom left coord
@@ -114,9 +117,13 @@ class Camera:
                        color=(255, 0, 0),
                        thickness=2)
 
+        # update the create a new instance of the object dictionary
         object_dict = self.centroid_tracker.update_objects(rects)
 
+        object_vectors = {}
+
         for obj_id, centroid in object_dict.items():
+
             text = "ID %s" % {obj_id}
 
             cv2.putText(frame,
@@ -129,7 +136,13 @@ class Camera:
 
             cv2.circle(frame, (centroid[0], centroid[1]), 4, (0, 255, 0), -1)
 
-        return frame, object_dict
+            partial_vector = self.object_vector(centroid)
+
+            # redefine the centroid as a partial vector (a vector that is
+            # missing one of it's value's)
+            object_vectors[obj_id] = partial_vector
+
+        return frame, object_vectors
 
     def __del__(self):
         self.cam.release()
