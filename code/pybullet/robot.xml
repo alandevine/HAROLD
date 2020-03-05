@@ -10,19 +10,19 @@
 
 		<visual>
 			<geometry>
-				<mesh filename="rotary_base.stl" scale="1 1 1"/>
+				<mesh filename="stl/rotary_base.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 
 		<collision>
 			<origin xyz="0 0 0" rpy="0 0 0"/>
 			<geometry>
-				<mesh filename="rotary_base.stl" scale="1 1 1"/>
+				<mesh filename="stl/rotary_base.stl" scale="1 1 1"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="base_rotator_joint" type="revolute">
+	<joint name="base__rotator" type="revolute">
 		<axis xyz="0 0 1"/>
 		<limit effort="1000" lower="-6.28" upper="6.28" velocity="0.5"/>
 		<origin rpy="0 0 0" xyz="0 0 6.5"/>
@@ -39,19 +39,19 @@
 
 		<visual>
 			<geometry>
-				<mesh filename="rotator.stl" scale="1 1 1"/>
+				<mesh filename="stl/rotator.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="rotator.stl" scale="1 1 1"/>
+				<mesh filename="stl/rotator.stl" scale="1 1 1"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="rotator_shoulder_joint" type="revolute">
+	<joint name="rotator__shoulder" type="revolute">
 		<axis xyz="1 0 0"/>
 		<limit effort="1000" lower="-2" upper="2" velocity="0.5"/>
 		<origin rpy="0 0 0" xyz="0 0 16.41"/>
@@ -69,19 +69,19 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 -6"/>
 			<geometry>
-				<mesh filename="shoulder.stl" scale="1 1 1"/>
+				<mesh filename="stl/shoulder.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="shoulder.stl" scale="1 1 1"/>
+				<mesh filename="stl/shoulder.stl" scale="1 1 1"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="shoulder_elbow_joint" type="revolute">
+	<joint name="shoulder__elbow" type="revolute">
 		<axis xyz="1 0 0"/>
 		<limit effort="1000" lower="-2" upper="2" velocity="0.5"/>
 		<origin rpy="0 0 0" xyz="0 0 22"/>
@@ -99,19 +99,19 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 -4.27"/>
 			<geometry>
-				<mesh filename="elbow.stl" scale="1 1 1"/>
+				<mesh filename="stl/elbow.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="elbow.stl" scale="1 1 1"/>
+				<mesh filename="stl/elbow.stl" scale="1 1 1"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="elbow_hand_joint" type="revolute">
+	<joint name="elbow__hand" type="revolute">
 		<axis xyz="1 0 0"/>
 		<limit effort="1000" lower="-2" upper="2" velocity="0.5"/>
 		<origin rpy="0 0 0" xyz="0 0 22.28"/>
@@ -129,21 +129,21 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="0 0 -3.4"/>
 			<geometry>
-				<mesh filename="hand.stl" scale="1 1 1"/>
+				<mesh filename="stl/hand.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="hand.stl" scale="1 1 1"/>
+				<mesh filename="stl/hand.stl" scale="1 1 1"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="hand_servo_gear_joint" type="revolute">
+	<joint name="hand__servo_gear" type="revolute">
 		<axis xyz="0 1 0"/>
-		<limit effort="1000" lower="-1.6" upper=".6" velocity="0.5"/>
+		<limit effort="10" lower="-1.6" upper=".6" velocity="0.5"/>
 		<origin rpy="0 0 0" xyz="1.3 0 6.5"/>
 		<parent link="hand_link"/>
 		<child link="servo_gear_link"/>
@@ -159,22 +159,77 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="-1.3 0 -1.25"/>
 			<geometry>
-				<mesh filename="servo_gear.stl" scale="1 1 1"/>
+				<mesh filename="stl/servo_gear.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 
 		<collision>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 			<geometry>
-				<mesh filename="servo_gear.stl" scale="1 1 1"/>
+				<mesh filename="stl/servo_gear.stl" scale="1 1 1"/>
+			</geometry>
+		</collision>
+	</link>
+	
+	<joint name="servo_gear__finger_right" type="revolute">
+		<axis xyz="0 1 0"/>
+		<limit effort="1000" lower="-3.15" upper="3.15" velocity="0.5"/>
+		<mimic joint="hand__servo_gear" multiplier="1" offset="0"/>
+		<origin rpy="0 0 0" xyz="4 0 0"/>
+		<parent link="servo_gear_link"/>
+		<child link="finger_right_link"/>
+	</joint>
+	
+	<link name="finger_right_link">
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<mass value="1"/>
+			<inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100"/>
+		</inertial>
+
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="stl/finger_right.stl" scale="1 1 1"/>
+			</geometry>
+		</visual>
+
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="slt/finger_right.stl" scale="1 1 1"/>
 			</geometry>
 		</collision>
 	</link>
 
-	<joint name="hand_idle_gear_joint" type="revolute">
+	<joint name="hand__bar_right" type="revolute">
 		<axis xyz="0 1 0"/>
-		<limit effort="1000" lower="-1.6" upper=".6" velocity="0.5"/>
-		<mimic joint="hand_servo_gear_joint" multiplier="-1"/>
+		<limit effort="10" lower="-.6" upper="1.6" velocity="0.5"/>
+		<mimic joint="hand__servo_gear" multiplier="-1"/>
+		<origin rpy="0 0 0" xyz=".7 - 8.5"/>
+		<parent link="hand_link"/>
+		<child link="bar_right_link"/>
+	</joint>
+
+	<link name="bar_right_link">
+		<inertial>
+			<origin rpy="0 0 0" xyz="2 0 -.5"/>
+			<mass value="1"/>
+			<inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100"/>
+		</inertial>
+
+		<visual>
+			<origin rpy="0 0 0" xyz="2 0 -.5"/>
+			<geometry>
+				<mesh filename="stl/bar.stl" scale="1 1 1"/>
+			</geometry>
+		</visual>
+	</link>
+
+	<joint name="hand__idle_gear" type="revolute">
+		<axis xyz="0 1 0"/>
+		<limit effort="10" lower="-1.6" upper=".6" velocity="0.5"/>
+		<mimic joint="hand__servo_gear" multiplier="-1"/>
 		<origin rpy="0 0 0" xyz="-1.3 0 6.5"/>
 		<parent link="hand_link"/>
 		<child link="idle_gear_link"/>
@@ -190,15 +245,15 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="1.3 0 -1.25"/>
 			<geometry>
-				<mesh filename="idle_gear.stl" scale="1 1 1"/>
+				<mesh filename="stl/idle_gear.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 	</link>
 
-	<joint name="hand_bar_left_joint" type="revolute">
+	<joint name="hand__bar_left" type="revolute">
 		<axis xyz="0 1 0"/>
-		<limit effort="1000" lower="-1.6" upper="0.6" velocity="0.5"/>
-		<mimic joint="hand_servo_gear_joint" multiplier="1"/>
+		<limit effort="10" lower="-1.6" upper="0.6" velocity="0.5"/>
+		<mimic joint="hand__servo_gear" multiplier="1"/>
 		<origin rpy="0 0 0" xyz="-.7 0 8.5"/>
 		<parent link="hand_link"/>
 		<child link="bar_left_link"/>
@@ -214,9 +269,40 @@
 		<visual>
 			<origin rpy="0 0 0" xyz="-2 0 -.5"/>
 			<geometry>
-				<mesh filename="bar.stl" scale="1 1 1"/>
+				<mesh filename="stl/bar.stl" scale="1 1 1"/>
 			</geometry>
 		</visual>
 	</link>
+
+	<joint name="idle_gear__finger_left" type="revolute">
+		<axis xyz="0 1 0"/>
+		<limit effort="10" lower="-1.6" upper="0.6" velocity="0.5"/>
+		<mimic joint="hand__servo_gear" multiplier="1"/>
+		<origin rpy="0 0 0" xyz="-4 0 0"/>
+		<parent link="idle_gear_link"/>
+		<child link="finger_left_link"/>
+	</joint>
+
+	<link name="finger_left_link">
+		<inertial>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<mass value="1"/>
+			<inertia ixx="100" ixy="0" ixz="0" iyy="100" iyz="0" izz="100"/>
+		</inertial>
+
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="stl/finger_left.stl" scale="1 1 1"/>
+			</geometry>
+		</visual>
+		
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="stl/finger_left.stl" scale="1 1 1"/>
+			</geometry>
+	</link>
+
 
 </robot>
