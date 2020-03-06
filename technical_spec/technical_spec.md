@@ -14,13 +14,13 @@
 
 ### 1.1. Overview
 
-H.A.R.O.L.D is an machine learning driven robotic arm. Typically robotic arms make use of a P.I.D controller, this controls movement. By replacing the P.I.D controller with a Machine Learning Algorithm we can potentially create more efficient routines. This arm is coupled with an easy to use G.U.I which can be easily picked up by user's of all technical ability.
+H.A.R.O.L.D is a machine learning-driven robotic arm. Typically robotic arms make use of a P.I.D controller, this controls movement. By replacing the P.I.D controller with a Machine Learning Algorithm we can potentially create more efficient routines. This arm is coupled with an easy to use G.U.I can be easily picked up by given users of all technical ability.
 
 ### 1.2. Glossary
 
 #### **GUI**
 
-GUI stands for Guided User Interface. This encompasses all mouse/ touch driven interactions with a given program.
+GUI stands for Guided User Interface. This encompasses all mouse/ touch-driven interactions with a given program.
 
 #### **Machine Learning**
 
@@ -32,31 +32,33 @@ A Neural Network is the backbone of a machine learning algorithm. It is comprise
 
 #### **Reinforcement Learning**
 
-Reinforcement learning is a subset of machine learning. The goal is to train an artificial neural network by observing actions and then rewarding good behavior while penalizing bad behavior. Typically there is an Agent which interacts with an Environment. This back-and-forth between Agent and Environment allows us to populate a Q-Table with information.
+Reinforcement learning is a subset of machine learning. The goal is to train an artificial neural network by observing actions and then rewarding good behaviour while penalizing bad behaviour. Typically there is an Agent which interacts with an Environment. This back-and-forth between Agent and Environment allows us to populate a Q-Table with information.
 
 #### **Agent**
 
-An Agent is the interface between a neural network and all other training. It is responsible for choosing actions.
+An Agent is an interface between a neural network and all other training. It is responsible for choosing actions.
 
 ### **Environment**
 
+An Environment takes actions from the Agent and is responsible for calculating rewards as well as putting into motion, any action that the Agent chose.
+
 ### **Bounding Box**
 
-A box that surrounds an object on screen.
+A box that surrounds an object on the screen.
 
 ### **Q-Table**
 
-A Q-Table is table where the columns denote all possible actions that an Agent can take. Each row then denotes a state that the Agent is in. Finally each cell holds a probability for success if the Agent is chooses a particular action when the Environment is in a given state.
+A Q-Table is a table where the columns denote all possible actions that an Agent can take. Each row then denotes a state that the Agent is in. Finally, each cell holds a probability for success if the Agent chooses a particular action when the Environment is in a given state.
 
 ## 2. System Architecture
 
 ### Language
 
-We chose python 3.8 as the backbone for the project. This was mainly because it allowed up to make use of many of the libraries developed for Machine Learning and computer vision. Below we will go into more detail on the libraries being used.
+We chose Python 3.8 as the backbone for the project. This was mainly because it allowed up to make use of many of the libraries developed for Machine Learning and computer vision. Below we will go into more detail on the libraries being used.
 
 ### Gym
 
-Gym is a Reinforcement Learning library from OpenAi. This library allowed was the backbone of our environment code.
+The gym is a Reinforcement Learning library from OpenAi. This library allowed was the backbone of our environment code.
 
 ### Tensorflow/ Keras
 
@@ -64,7 +66,7 @@ Tensorflow is a library from Google for designing Neural Networks, with Keras be
 
 ### OpenCv
 
-OpenCv is a computer vision library. This is what we used to handel camera feed and creating boundary box's over detected objects.
+OpenCV is a computer vision library. This is what we used to handle camera feed and creating bounding boxes over detected objects.
 
 ### Architecture Diagram
 
@@ -74,7 +76,7 @@ Our System can be broken down into three distinct areas.
 2. Physical Space, and
 3. Network Space
 
-Below depicts a high-level view of how our system is layed out.
+Below depicts a high-level view of how our system is laid out.
 
 ![architecture diagram](images/architecture_diagram.png)
 
@@ -106,7 +108,7 @@ Network Space contains all areas related to our Neural Network.
 
 ### Boundary Box Disappearance
 
-When creating boundary box, originally we tried using one of the methods for finding the difference between images in opencv. This is due to the method checking the comparing the most recent frame to the frame immediately before it. To resolve this, we require the user to clear the area of operation so that a static background frame can be set.
+When creating a bounding box, originally we tried using one of the methods for finding the difference between images in OpenCV. This is due to the method checking the comparing the most recent frame to the frame immediately before it. To resolve this, we require the user to clear the area of operation so that a static background frame can be set.
 
 ## 5. Installation Guide
 
@@ -134,8 +136,8 @@ This will parse through the requirements.txt file and download all the third par
 
 ### Step 3: Connect your cameras
 
-Plug in you webcams into your computer.
-Note: This project has been developed around the Sony Play Station Eye cameras, therefore any off behavior with regards to Object detections maybe as a result of that.
+Plugin you webcams into your computer.
+Note: This project has been developed around the Sony Play Station Eye cameras, therefore any off behaviour with regards to Object detections may be as a result of that.
 
 ### Step 4: Connect the robotic arm
 
