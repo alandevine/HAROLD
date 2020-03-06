@@ -82,13 +82,19 @@ Below depicts a high-level view of how our system is laid out.
 
 #### User Space
 
+User Space is the area in which a person would spend most of their time when operating the system. This interaction will be done through the G.U.I. The G.U.I receive the video feed of both camera objects and supplies these objects with a path and viewpoint.
+
+When it comes time pick-and-place an object, 2 vectors are sent to the Neural Network. 
+
 #### Physical Space
 
-The physical space encompasses all hardware devices associated with this project.
+The physical space encompasses all hardware devices associated with this project. This would be are two cameras and a robotic arm. The robotic arm only receives commands from the Neural Network.
 
 #### Network Space
 
-Network Space contains all areas related to our Neural Network.
+Network Space contains all areas related to our Neural Network. As stated above, two vectors are given to the Neural Network, These vectors correspond to the objects original location, and it's desired location. The Neural Network will then send commands to the arm until the task is complete.
+
+Training is handled by the Agent/ Environment loop described in the Glossary and depicted below.
 
 ## 3. High-Level Design
 
