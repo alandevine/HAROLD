@@ -41,10 +41,6 @@ class CameraSetup:
         self.cam_1_path.set(cameras[0])
         self.cam_2_path.set(cameras[1])
 
-
-        print(self.cam_1_path)
-        print(self.cam_1_path.get())
-
         self.cam_1_pos = tk.StringVar(self.root)
         self.cam_2_pos = tk.StringVar(self.root)
 
@@ -93,7 +89,7 @@ class CameraSetup:
         self.show_frame(self.cam_2, self.cam_2_win)
 
         self.root.mainloop()
-    
+
     def show_frame(self, camera, label):
         _, frame = camera.cam.read()
 
@@ -115,7 +111,7 @@ class CameraSetup:
 class MainWindow:
     """Main Class for the User Interface"""
 
-    def __init__(self, win_name="Main", win_h=900,
+    def __init__(self, win_name, cam_1, cam_2, win_h=900,
                  win_w=1600, frame_delay=100):
 
         self.win_name = win_name
@@ -125,6 +121,9 @@ class MainWindow:
 
         # horizontal resolution
         self.win_w = win_w
+
+        self.cam_1 = cam_1
+        self.cam_2 = cam_2
 
         # delay between frames
         self.frame_delay = frame_delay
@@ -145,6 +144,16 @@ class MainWindow:
         self.cam_1_win = tk.Label(self.main_win)
         self.cam_2_win = tk.Label(self.main_win)
 
+        if self.cam_1.camera_view == "TOP-DOWN":
+            self.td_frame = self.cam_1_win
+            self.cam_1_win.bind("<Button-1>",
+                                lambda e="<Button-1>": self.on_click_frame(e))
+
+        else:
+            self.td_frame = self.cam_2_win
+            self.cam_2_win.bind("<Button-1>",
+                                lambda e="<Button-1>": self.on_click_frame(e))
+
         # list of buttons that interact with a dictionary
         self.object_space = tk.Frame(self.main_win)
         self.object_title = tk.Label(self.object_space, text="detected objects")
@@ -160,15 +169,19 @@ class MainWindow:
         self.object_title.grid(row=1, column=1)
 
         self.object_dict = OrderedDict()
+
         self.object_list = []
 
-        self.update_object_list()
+        self.object_src_vec = None
+        self.dest_x_y = None
+        self.dest_vec = None
+        self.show_frame(cam_1, self.cam_1_win)
+        self.show_frame(cam_2, self.cam_2_win)
 
     def show_frame(self, camera, label):
         """Method for showing a single camera frame
         in addition to showing a frame, the detected objects (objects that
         do not appear in the background frame defined in the Camera class
-        will be given a bounding box as well as centroid
 
         This method will call itself after 100ms
         """
@@ -178,19 +191,19 @@ class MainWindow:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
         if camera.static_background is not None:
+
             frame, objects = camera.draw_bounding_boxs(frame)
 
-            for obj_id, part_vec_a in objects.items():
-                # object id's are distributed left to right of the given frame
-
-                if obj_id in self.object_dict.keys():
-                    # if there is already a vector with this id
-                    partial_vector = self.object_dict[obj_id]
-                    self.object_dict[obj_id] = Camera.merge_vectors(
-                                                    partial_vector, part_vec_a)
-
+            for new_object_id, new_centroid in objects.items():
+                if new_object_id in self.object_dict.keys():
+                    new_part_vec = camera.object_vector(new_centroid)
+                    for obj_id, part_vec in self.object_dict.items():
+                        if abs(new_part_vec[1] - part_vec[1]):
+                            new_vec = Camera.merge_vectors(new_part_vec, part_vec)
+                            self.object_dict[obj_id] = new_vec
+                            self.update_object_list()
                 else:
-                    self.object_dict[obj_id] = part_vec_a
+                    self.object_dict[new_object_id] = camera.object_vector(new_centroid)
 
         img = ImageTk.PhotoImage(PIL.Image.fromarray(frame),
                                  master=self.main_win)
@@ -207,22 +220,46 @@ class MainWindow:
         """Method for updating visible list of detected objects derived from
         the object dictionary"""
 
+        for button in self.object_list:
+            button.grid_remove()
+
         for k, v in self.object_dict.items():
-            if k not in self.object_list:
-                self.object_list.append(k)
 
-                obj = ttk.Button(self.main_win,
-                                 text=k,
-                                 command=lambda k=k: self.on_click_object(k))
+            obj = ttk.Button(self.main_win,
+                             text=k,
+                             command=lambda k=k: self.on_click_object(k))
 
-                obj.grid(row=len(self.object_list) + 1, column=1)
+            obj.grid(row=2 + len(self.object_list), column=1)
 
-        self.root.after(self.frame_delay, self.update_object_list)
+            self.object_list.append(obj)
+
+        self.object_list = []
+        self.object_dict = OrderedDict()
 
     def on_click_object(self, key):
-        val = self.object_dict[key]
-        print(val)
-        return val
+        self.object_src_vec = self.object_dict[key]
+        print(self.object_src_vec)
+
+    def on_click_frame(self, event):
+        self.dest_x_y = (event.x, event.y)
+
+        if self.dest_vec is not None:
+            for button in self.object_list:
+                button.grid_remove()
+
+            self.object_list = []
+            self.object_dict = OrderedDict()
+
+            if self.dest_x_y is not None:
+                print(self.td_frame.size())
+                x = 640 - self.dest_x_y[1] // 2
+                y = 480 - self.dest_x_y[0] // 2
+                z = self.object_src_vec[2]
+                self.dest_vec = (x, y, z)
+
+                print(self.dest_vec)
+
+        return (event.x, event.y)
 
 
 def list_cameras():
@@ -247,10 +284,8 @@ def main():
         cam_1, cam_2 = setup.return_cameras()
         setup.root.destroy()
 
-        root = MainWindow("H.A.R.O.L.D")
+        root = MainWindow("H.A.R.O.L.D", cam_1, cam_2)
 
-        root.show_frame(cam_1, root.cam_1_win)
-        root.show_frame(cam_2, root.cam_2_win)
         root.gui_loop()
     except KeyboardInterrupt:
         quit()
