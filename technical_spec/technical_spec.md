@@ -116,6 +116,10 @@ Training is handled by the Agent/ Environment loop described in the Glossary and
 
 When creating a bounding box, originally we tried using one of the methods for finding the difference between images in OpenCV. This is due to the method checking the comparing the most recent frame to the frame immediately before it. To resolve this, we require the user to clear the area of operation so that a static background frame can be set.
 
+### Tracking Centroids
+
+We had an issue when creating centroids in the GUI where instead of a centroid moving, it would just spawn a new centroid. We fixed this by adding a class that manages tracking centriods.
+
 ### Lack of documentation
 
 While developing a gym environment for simulating the arm, we ran into a number of issues with trying to get the environment to work, due to the severe lack of documention available to us.  In order to overcome this lack of documentation, we had to read through and try to decipher a number of premade environments to try and adapt them to our needs, which ended up being very time consuming.
@@ -141,6 +145,12 @@ Navigate into the code directory by entering the following into your terminal
 To install the prerequisite dependencies, enter the following.
 
 ```pip install -r requirements.txt```
+
+You will also need to install tk and python3-tk packages
+
+On Ubuntu this will be.
+
+```sudo apt install tk python3-tk```
 
 This will parse through the requirements.txt file and download all the third party modules used in this project.
 
