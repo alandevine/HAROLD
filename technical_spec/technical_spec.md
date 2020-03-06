@@ -104,4 +104,32 @@ Network Space contains all areas related to our Neural Network.
 
 ## 4. Problems and Resolution
 
+### Boundary Box Disappearance
+
+When creating boundary box, originally we tried using one of the methods for finding the difference between images in opencv. This is due to ...... . To resolve this, we added have the user be prompted to clear the area of operation so that
+
 ## 5. Installation Guide
+
+
+### Step 0: Clone the repository
+
+Open a terminal and paste in the following
+
+```git clone https://gitlab.computing.dcu.ie/devina24/2020-ca326-devina24-harold.git```
+
+### Step 1: Download the dependencies
+
+Navigate into the code directory by entering the following into your terminal
+
+```cd 2020-ca326-devina24-harold.git/code/```
+
+To install the prerequisite dependencies, enter the following.
+
+```pip install -r requirements.txt```
+
+This will parse through the requirements.txt file and download all the third party modules used in this project.
+
+### Step 3: Plug in your cameras
+
+Plug in you webcams into your computer.
+Note: This project has been developed around the Sony Play Station Eye cameras, therefore any off behavior with regards to Object detections maybe as a result of that.
