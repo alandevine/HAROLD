@@ -1,13 +1,9 @@
 #!/usr/bin/python3
 
+import gym
 import numpy as np
-
 from keras.models import load_model
 from ReplayBuffer import ReplayBuffer, build_dqn
-
-import gym
-import envs
-
 from gym.wrappers import FlattenObservation, FilterObservation
 
 """
@@ -25,22 +21,25 @@ class HaroldAgent(object):
 
     def __init__(
                 self,
-                alpha,                  # Learning Rate
-                gamma,                  # Discount Factor
-                n_actions,              # Number of actions available in the
-                                        # envirnoment
-                epsilon,                # Random Factor
-                batch_size,             # 
-                input_dims,             # D
-                epsilon_dec=0.9999,      # Rate at which the epsilon value decreases
-                epsilon_min=0.1,        # Value at which epsilon stops decrementing
-                memory_size=1000000,    # Maximum size of alotted memory
-                file_name="harold_dqn", # File name for the model
+                alpha,                   # Learning Rate
+                gamma,                   # Discount Factor
+                n_actions,               # Number of actions available in the
+                                         # envirnoment
+                epsilon,                 # Random Factor
+                batch_size,
+                input_dims,
+                epsilon_dec=0.9999,      # Rate at which the epsilon value
+                                         # decreases
+                epsilon_min=0.1,         # Value at which epsilon stops
+                                         # decrementing
+                memory_size=1000000,     # Maximum size of alotted memory
+                file_name="harold_dqn",  # File name for the model
 
                 # Below values are subject to change
-                n_epochs=200,           # Number of epochs to be completed
-                n_episodes=80,          # Number of episodes per epoch
-                K=4                     # Number of random future states
+                n_epochs=200,            # Number of epochs to be completed
+                n_episodes=80,           # Number of episodes per epoch
+                n_time_steps=50,         # Number of choices made by agent
+                K=4                      # Number of random future states
             ):
 
         self.action_space = [i for i in range(n_actions)]
@@ -52,7 +51,7 @@ class HaroldAgent(object):
         self.epsilon_min = epsilon_min
         self.batch_size = batch_size
         self.model_file = file_name
-        self.time_step=50
+        self.n_time_steps = n_time_steps
 
         self.env = gym.make('HaroldReach-v0')
         self.n_epochs = n_epochs
@@ -80,22 +79,20 @@ class HaroldAgent(object):
         if random_epsilon < self.epsilon:
             # Select random action
             action = self.env.action_space.sample()
-#            action = np.random.choice(self.action_space)
         else:
-            action = self.q_eval.predict(state)[0]
-            action *= 0.001
-            print('HEHRE IST IS:', action)
+            actions = self.q_eval.predict(state)[0]
+            self.epsilon *= self.epsilon_dec
             # Select an action of the highest value
-            #action = actions[np.argmax(actions)]
+            action = actions[np.argmax(actions)]
 
         return action
 
     def learn(self):
         """Method that contains learning algorithms"""
+
         if self.memory.memory_counter < self.batch_size:
             return
 
-        #return_vals = self.memory.random_sample(self.batch_size)
         return_vals = self.memory.sample_buffer(-1)
         state, action, reward, new_state, done = return_vals
 
@@ -134,14 +131,21 @@ class HaroldAgent(object):
 
                 # Reset the environment to it's initial state
                 observation = self.env.reset()
-                observation = FlattenObservation(FilterObservation(observation,['observation','achieved_goal','desired_goal']))
+                observation = FlattenObservation(
+                                    FilterObservation(
+                                            observation,
+                                            ['observation',
+                                             'achieved_goal',
+                                             'desired_goal']
+                                    )
+                              )
 
                 # Because we are not working with a continous action space,
                 # we are limiting ourselfs to a finite number of timesteps
                 # per episode, other wise the below for loop would be replaced
                 # with `while not done:`
 
-                for _ in range(self.time_step):
+                for _ in range(self.n_time_steps):
 
                     self.env.render()
                     action = self.act(observation['observation'])
@@ -156,7 +160,11 @@ class HaroldAgent(object):
                                                new_observation['observation'],
                                                done))
 
-                    self.save(np.asarray(observation['observation']),action,reward,new_observation['observation'],done)
+                    self.save(np.asarray(observation['observation']),
+                              action,
+                              reward,
+                              new_observation['observation'],
+                              done)
 
                     observation = new_observation
                     self.learn()
@@ -165,10 +173,11 @@ class HaroldAgent(object):
                     if done is True:
                         break
 
+                # HER Algorithm
                 for t in range(len(episode_experience)):
                     for _ in range(self.K):
                         future = np.random.randint(t, len(episode_experience))
-                        goal = episode_experience[future][3] # next_state of future
+                        goal = episode_experience[future][3]
                         state = episode_experience[t][0]
                         action = episode_experience[t][1]
                         next_state = episode_experience[t][3]
