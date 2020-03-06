@@ -6,3 +6,9 @@ register(
     max_episode_steps=200
 )
 
+register(
+    id='HaroldPickPlace-v0',
+    entry_point='envs.harold_pick_and_place_env:HaroldPickPlace',
+    max_episode_steps=200
+)
+
