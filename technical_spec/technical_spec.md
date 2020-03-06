@@ -76,7 +76,7 @@ Our System can be broken down into three distinct areas.
 
 Below depicts a high-level view of how our system is layed out.
 
-![architecture diagram](architecturure_diagram2.png)
+![architecture diagram](images/architecture_diagram.png)
 
 #### User Space
 
@@ -92,32 +92,35 @@ Network Space contains all areas related to our Neural Network.
 
 ### 3.1. Data Flow Diagram
 
-![data-flow-training](data_flow_training.png)
+![data-flow-training](images/data_flow_training.png)
 
 ### 3.2. UML Diagram
 
-![uml-env](env_uml.png)
+![uml-env](images/env_uml.png)
 
 ### Context Diagram
 
-![context](context_diagram_in_use.png)
+![context](images/context_diagram_in_use.png)
 
 ## 4. Problems and Resolution
 
 ### Boundary Box Disappearance
 
-When creating boundary box, originally we tried using one of the methods for finding the difference between images in opencv. This is due to ...... . To resolve this, we added have the user be prompted to clear the area of operation so that
+When creating boundary box, originally we tried using one of the methods for finding the difference between images in opencv. This is due to the method checking the comparing the most recent frame to the frame immediately before it. To resolve this, we require the user to clear the area of operation so that a static background frame can be set.
 
 ## 5. Installation Guide
 
+### Step 0: Make your robot arm
 
-### Step 0: Clone the repository
+The robotic arm that this project was created around is can be found here: [Build a Giant 3D Printed Robot Arm](https://www.instructables.com/id/Build-a-Giant-3D-Printed-Robot-Arm/).
+
+### Step 1: Clone the repository
 
 Open a terminal and paste in the following
 
 ```git clone https://gitlab.computing.dcu.ie/devina24/2020-ca326-devina24-harold.git```
 
-### Step 1: Download the dependencies
+### Step 2: Download the dependencies
 
 Navigate into the code directory by entering the following into your terminal
 
@@ -129,7 +132,11 @@ To install the prerequisite dependencies, enter the following.
 
 This will parse through the requirements.txt file and download all the third party modules used in this project.
 
-### Step 3: Plug in your cameras
+### Step 3: Connect your cameras
 
 Plug in you webcams into your computer.
 Note: This project has been developed around the Sony Play Station Eye cameras, therefore any off behavior with regards to Object detections maybe as a result of that.
+
+### Step 4: Connect the robotic arm
+
+TBD
