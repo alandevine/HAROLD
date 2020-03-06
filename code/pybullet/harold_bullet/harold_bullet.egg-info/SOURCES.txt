@@ -1,0 +1,5 @@
+harold_bullet.egg-info/PKG-INFO
+harold_bullet.egg-info/SOURCES.txt
+harold_bullet.egg-info/dependency_links.txt
+harold_bullet.egg-info/requires.txt
+harold_bullet.egg-info/top_level.txt
