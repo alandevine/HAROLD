@@ -116,6 +116,10 @@ Training is handled by the Agent/ Environment loop described in the Glossary and
 
 When creating a bounding box, originally we tried using one of the methods for finding the difference between images in OpenCV. This is due to the method checking the comparing the most recent frame to the frame immediately before it. To resolve this, we require the user to clear the area of operation so that a static background frame can be set.
 
+### Lack of documentation
+
+While developing a gym environment for simulating the arm, we ran into a number of issues with trying to get the environment to work, due to the severe lack of documention available to us.  In order to overcome this lack of documentation, we had to read through and try to decipher a number of premade environments to try and adapt them to our needs, which ended up being very time consuming.
+
 ## 5. Installation Guide
 
 ### Step 0: Make your robot arm
